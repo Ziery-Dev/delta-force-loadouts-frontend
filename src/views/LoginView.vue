@@ -11,6 +11,7 @@
         <button type="submit">
             Entrar
         </button>
+        <p>{{erroMsg }}</p>
 
     </form>
 
@@ -26,14 +27,16 @@ const router = useRouter();
 const authStore = useAuthStore();
 const username = ref("");
 const password = ref("");
+const erroMsg = ref("")
 
 const fazerLogin = async() => {
+    erroMsg.value = ""
     try {
     await authStore.login(username.value, password.value);
     router.push("/"); // redireciona após login
   } catch (error) {
-    if(error.response.status === 401)
-    alert("Usuário ou senha inválidos.")
+    if(error.response.status === 401 || error.response.status === 400)
+    erroMsg.value = "Usuário ou senha inválidos"
     console.log(error)
    // error.value = "Usuário ou senha inválidos.";
   }
