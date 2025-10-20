@@ -3,7 +3,28 @@
     <router-link to="/">Home</router-link> |
   </nav>
   <router-view/>
+  <button @click="sairDaConta">
+    sair
+  </button>
 </template>
+
+<script setup>
+import { useAuthStore } from './stores/auth';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+
+const sairDaConta = ()=> {
+  authStore.logout();
+  router.push("/login")
+
+}
+
+
+
+</script>
 
 <style>
 #app {
