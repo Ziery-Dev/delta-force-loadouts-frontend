@@ -38,7 +38,6 @@ const fazerLogin = async() => {
     if(error.response.status === 401 || error.response.status === 400)
     erroMsg.value = "Usuário ou senha inválidos"
     console.log(error)
-   // error.value = "Usuário ou senha inválidos.";
   }
 }
 

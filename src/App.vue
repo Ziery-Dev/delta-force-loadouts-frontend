@@ -1,38 +1,41 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-  </nav>
-  <router-view/>
-  <button @click="sairDaConta">
-    sair
-  </button>
+  <div>
+    <NavBar />
+    <router-view />
+  </div>
+
+
 </template>
 
 <script setup>
-import { useAuthStore } from './stores/auth';
-import { useRouter } from 'vue-router';
-
-const authStore = useAuthStore();
-const router = useRouter();
+import NavBar from './components/NavBar.vue'
 
 
-const sairDaConta = ()=> {
-  authStore.logout();
-  router.push("/login")
 
-}
 
 
 
 </script>
 
 <style>
+*{
+  padding: 0;
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+body {
+  margin: 0;
+  background-color: #101410; /* fundo escuro do site */
+  color: #d8ffd8; /* texto levemente esverdeado */
+  font-family: sans-serif;
 }
 
 nav {
