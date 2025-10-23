@@ -40,6 +40,7 @@ const sairDaConta = () => {
   justify-content: center;
   align-items: center;
   padding: 12px 0;
+  border: 0.4px solid rgb(105, 105, 105);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
