@@ -1,74 +1,51 @@
 <template>
   <div class="home">
-    <h2>{{ armaStore.armas }}</h2>
     <div class="loadout-group">
-      <div class="caixa-loadout">
-        teste
+       <div class="caixa-loadout"  v-for="b in buildStore.builds" v-bind:key="b.id">
+        
+        <p>Arma: {{getWeaponName(b.weaponId) }} </p>
+        <p>Descrição:{{b.description }}</p>
+        <p>Alcance: {{ b.distance_range }}</p>
+        <p>Código: {{ b.code }}</p>
+          <button @click="copiarCodigo(b.code)">Copiar</button>
       </div>
-       <div class="caixa-loadout">
-        <img src="@/assets/arma-teste.webp" alt="">
-        <span>Nome: Arma teste</span>
-        <span>Classe compativél: fulano, beratano, cliclano </span>
-        <span>Distância de uso: Média distância</span>
-        <span>Código do loadout: 871378783197873y11</span>
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
-       <div class="caixa-loadout">
-        teste
-      </div>
+     
+ 
 
     </div>
   </div>
 </template>
 
 <script setup>
-import { useArmaSotore } from '@/stores/arma';
 import { onMounted } from 'vue';
+import { useBuildStore } from '@/stores/build';
+import { useArmaStore } from '@/stores/arma';
 
-const armaStore = useArmaSotore();
+const buildStore = useBuildStore();
+const armaStore = useArmaStore();
 
-onMounted(() => armaStore.listarArmas())
+onMounted(() => { 
+  buildStore.listarTodasBuilds(),
+  armaStore.listarArmas()
+
+})
+
+//função que busca no state de armas de armaStore, o nome da arma que corresponde a build atraves do id que a build fornece
+function getWeaponName(weaponId) {
+const weapon = armaStore.armas.find(a => a.id === weaponId);
+  return weapon ? weapon.name : 'Desconhecida'
+}
+
+
+//Função que permite copiar o codigo 
+function copiarCodigo(code) {
+  navigator.clipboard.writeText(code)
+    .then(() => alert('Código copiado!'))
+    .catch(err => console.error('Erro ao copiar:', err))
+}
+
+
+
 
 </script>
 
@@ -77,7 +54,7 @@ onMounted(() => armaStore.listarArmas())
 
 .loadout-group {
   width: 80%;
-  margin: 0 auto;
+  margin: 20px auto;
   gap: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -86,6 +63,7 @@ onMounted(() => armaStore.listarArmas())
 
 .caixa-loadout {
   background-color: #2a4a2a;
+  color: wheat;
   width: 220px;
   height: 220px;
   border-radius: 10px;
