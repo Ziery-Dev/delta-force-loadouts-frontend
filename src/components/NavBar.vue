@@ -7,6 +7,14 @@
         </button>
       </router-link>
 
+      <router-link to="/cadastrar-build">
+        <button class="cadastro-button">
+          <span class="material-icons">add_box</span>
+          cadastrar build
+        </button>
+        
+      </router-link>
+
       <div class="search-box">
         <span class="material-icons">search</span>
         <input type="search" placeholder="Buscar..." />
@@ -95,13 +103,32 @@ nav {
   gap: 5px;
   border: none;
   background: transparent;
-  color: #d8ffd8;
+  color: #19db50;
   cursor: pointer;
   font-size: 16px;
   transition: color 0.2s;
 }
 
-.logout-btn:hover {
+
+.cadastro-button{
+   display: flex;
+  align-items: center;
+  border: 0.5px solid rgb(36, 163, 11);
+  border-radius: 5px;
+  background: transparent;
   color: #19db50;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.logout-btn:hover, .cadastro-button:hover, .home-button:hover {
+  color: #d8ffd8;
+}
+
+
+
+ a{
+  text-decoration: none;
 }
 </style>

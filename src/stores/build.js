@@ -1,29 +1,42 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
 
-export const useBuildStore = defineStore ('build', {
+export const useBuildStore = defineStore('build', {
 
-    state:() => {
+    state: () => {
         return {
-            builds:[],
+            builds: [],
         }
     },
 
-    actions: { 
-        async listarTodasBuilds(){
-        try{
-            const response = await api.get('/build')
-            this.builds = response.data
+    actions: {
+        async listarTodasBuilds() {
+            try {
+                const response = await api.get('/build')
+                this.builds = response.data
+            }
+            catch (error) { //ver isso aqui depois...
+                console.log(error)
+                throw error;
+            }
+
+        },
+
+         async cadastrarBuild(build){
+            try{
+                const response = await api.post('/build', build )
+                this.builds.push = response.data
+                return response.data
+            }
+             catch (error) {
+                if (error.response) {
+                    throw error.response
+                }
+                else {
+                    throw new Error('Erro de rede')
+                }
+            }
         }
-        catch(error){ //ver isso aqui depois...
-            console.log(error)
-            throw error;
-        }
-    },
-
-
-
-
 
 
     }

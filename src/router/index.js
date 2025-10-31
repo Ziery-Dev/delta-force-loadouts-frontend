@@ -2,12 +2,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { useAuthStore } from '@/stores/auth'
+import CadastrarBuildView from '@/views/CadastrarBuildView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
+    meta: { requiresAuth: true },
+
+  },
+  {
+    path: '/cadastrar-build',
+    name: 'cadastrarBuild',
+    component: CadastrarBuildView,
     meta: { requiresAuth: true },
 
   },

@@ -10,8 +10,6 @@
           <button @click="copiarCodigo(b.code)">Copiar</button>
       </div>
      
- 
-
     </div>
   </div>
 </template>
@@ -43,6 +41,8 @@ function copiarCodigo(code) {
     .then(() => alert('Código copiado!'))
     .catch(err => console.error('Erro ao copiar:', err))
 }
+
+
 
 
 
