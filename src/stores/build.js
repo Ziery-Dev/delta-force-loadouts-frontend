@@ -22,19 +22,26 @@ export const useBuildStore = defineStore('build', {
 
         },
 
-         async cadastrarBuild(build){
-            try{
-                const response = await api.post('/build', build )
+        async cadastrarBuild(build) {
+            try {
+                const response = await api.post('/build', build)
                 this.builds.push = response.data
                 return response.data
             }
-             catch (error) {
-                if (error.response) {
-                    throw error.response
-                }
-                else {
-                    throw new Error('Erro de rede')
-                }
+            catch (error) {
+                console.log(error)
+                throw error
+            }
+        },
+
+        async removerBuild(id) {
+            try {
+                await api.delete(`/build/${id}`)
+                this.builds = this.builds.filter(build => build.id !== id)
+            }
+            catch (error) {
+                console.log(error)
+                throw error
             }
         }
 

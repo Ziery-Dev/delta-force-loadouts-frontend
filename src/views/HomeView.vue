@@ -2,12 +2,14 @@
   <div class="home">
     <div class="loadout-group">
        <div class="caixa-loadout"  v-for="b in buildStore.builds" v-bind:key="b.id">
-        
-        <p>Arma: {{getWeaponName(b.weaponId) }} </p>
-        <p>Descrição:{{b.description }}</p>
-        <p>Alcance: {{ b.distance_range }}</p>
-        <p>Código: {{ b.code }}</p>
-          <button @click="copiarCodigo(b.code)">Copiar</button>
+          
+          <p>Arma: {{getWeaponName(b.weaponId) }} </p>
+          <p>Descrição:{{b.description }}</p>
+          <p>Alcance: {{ b.distance_range }}</p>
+          <p>Código: {{ b.code }}</p>
+        <button @click="copiarCodigo(b.code)">Copiar</button>
+        <button @click="removerBuild(b.id)">Remover</button>
+        <button @click="editarBuild(b.id)">Editar</button>
       </div>
      
     </div>
@@ -42,6 +44,20 @@ function copiarCodigo(code) {
     .catch(err => console.error('Erro ao copiar:', err))
 }
 
+//remover build
+
+const removerBuild = async (id) => {
+  try {
+    await buildStore.removerBuild(id)
+    alert("Removido com sucesso!")
+  } 
+  catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+    alert(mensagem)
+  }
+}
+
+
 
 
 
@@ -62,13 +78,17 @@ function copiarCodigo(code) {
 }
 
 .caixa-loadout {
+  text-align: start;
+  background-image: url('/src/assets/card.jpg');
   background-color: #2a4a2a;
   color: wheat;
-  width: 220px;
+  width: 380px;
   height: 220px;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   transition: 0.4s;
+  box-shadow: 0px 0px 1px 1px rgb(34, 172, 0);
+  padding: 10px;
 }
 .caixa-loadout:hover {
   transform: scale(1.1);

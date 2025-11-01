@@ -74,7 +74,7 @@ onMounted(() => {
 
 
 
-//Exibe os alnces de forma mais amigavel
+//Exibe os alca\nces de forma mais amigavel
 const alcances = [
     { label: 'Curto alcance', value: 'CURTO' },
     { label: 'Médio alcance', value: 'MEDIO' },
@@ -87,7 +87,7 @@ const cadastrar = async () => {
     try {
         await buildStore.cadastrarBuild(form.value)
         router.push('/')
-        console.log('Sucesso ao cadastrar build!')
+        alert('Sucesso ao cadastrar build!')
 
     }
     catch (error) {
