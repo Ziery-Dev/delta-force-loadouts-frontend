@@ -9,26 +9,43 @@
           <p>Código: {{ b.code }}</p>
         <button @click="copiarCodigo(b.code)">Copiar</button>
         <button @click="removerBuild(b.id)">Remover</button>
-        <button @click="editarBuild(b.id)">Editar</button>
+        <button @click="editarBuild(b)">Editar</button>
       </div>
      
+    </div>
+    <div v-if="editando" class="editando-group" @click="fecharSeClicouFora">
+      <cadastrar-build-view
+      @click.stop
+      :editando="editando"
+      :build="buildEmEdicao"
+      @fechar-edicao="editando = false"
+      />    
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useBuildStore } from '@/stores/build';
 import { useArmaStore } from '@/stores/arma';
+import CadastrarBuildView from './CadastrarBuildView.vue';
+
 
 const buildStore = useBuildStore();
 const armaStore = useArmaStore();
+
+
+const editando = ref(false)
+const buildEmEdicao = ref (null)
+
 
 onMounted(() => { 
   buildStore.listarTodasBuilds(),
   armaStore.listarArmas()
 
 })
+
+
 
 //função que busca no state de armas de armaStore, o nome da arma que corresponde a build atraves do id que a build fornece
 function getWeaponName(weaponId) {
@@ -56,6 +73,21 @@ const removerBuild = async (id) => {
     alert(mensagem)
   }
 }
+
+//editar build
+const editarBuild = async(build) => {
+  editando.value = true
+  buildEmEdicao.value = {...build}
+}
+
+
+//Fecha a tela de edição se clicar fora dela
+function fecharSeClicouFora() {
+  editando.value = false
+}
+
+
+
 
 
 
@@ -98,4 +130,20 @@ const removerBuild = async (id) => {
 .caixa-loadout img{
   width: 90%;
 }
+
+/*Estilo editando*/
+.editando-group{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  z-index: 1000; /* Garante que estará acima da maioria dos elementos */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+}
+
+
+
 </style>

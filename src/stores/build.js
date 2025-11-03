@@ -25,7 +25,7 @@ export const useBuildStore = defineStore('build', {
         async cadastrarBuild(build) {
             try {
                 const response = await api.post('/build', build)
-                this.builds.push = response.data
+                this.builds.push(response.data)
                 return response.data
             }
             catch (error) {
@@ -43,6 +43,22 @@ export const useBuildStore = defineStore('build', {
                 console.log(error)
                 throw error
             }
+        },
+
+        async editarBuild(build, id) {
+            try {
+                const response = await api.put(`/build/${id}`, build)
+                const index = this.builds.findIndex(b => b.id === id)
+                if (index !== -1) {
+                    this.builds[index] = response.data
+                }
+                return response.data
+            }
+            catch (error) {
+                console.log(error)
+                throw error
+            }
+
         }
 
 

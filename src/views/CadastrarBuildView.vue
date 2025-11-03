@@ -1,7 +1,7 @@
 <template>
-    <div class="cadastro-group">
+    <div :class="{ 'cadastro-group': !props.editando, 'edicao-group': props.editando }">
 
-        <h1>Cadastre uma nova build</h1>
+        <h1>{{ props.editando ? "Editar build" : "Cadastre uma nova build" }}</h1>
 
         <form @submit.prevent="cadastrar">
 
@@ -34,7 +34,8 @@
             <p v-if="errors.code" class="erro">{{ errors.code }}</p>
 
 
-            <button type="submit">Cadastrar</button>
+            <button type="submit">{{ editando ? "Editar" : "Cadastrar" }}</button>
+            <button class="cancelarEdicao" v-if="props.editando" @click="['onFechar-edicao']">Cancelar</button>
 
         </form>
 
@@ -48,16 +49,24 @@
 <script setup>
 import router from '@/router';
 import { useBuildStore } from '@/stores/build';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps, defineEmits } from 'vue';
 import { useArmaStore } from '@/stores/arma';
+
+
+//props que recebe a info de edição e a build sendo editada
+const props = defineProps({
+    editando: Boolean,
+    build: Object
+})
+
+//Emit que manda a informação para o componente principal para fechar a janela de edição
+const emit = defineEmits(['fechar-edicao'])
+
 
 const buildStore = useBuildStore();
 const armaStore = useArmaStore();
 
-
-
 const errors = ref({});
-
 
 const form = ref({
     code: '',
@@ -66,15 +75,21 @@ const form = ref({
     weaponId: null,
 })
 
+
 onMounted(() => {
     buildStore.listarTodasBuilds(),
         armaStore.listarArmas()
+
+    //se tiver uma build vindo de props, significa que é uma edição, então copia os dados da build para o formulario
+    if (props.build) {
+        form.value = { ...props.build }
+    }
 
 })
 
 
 
-//Exibe os alca\nces de forma mais amigavel
+//Exibe os alcances de forma mais amigavel
 const alcances = [
     { label: 'Curto alcance', value: 'CURTO' },
     { label: 'Médio alcance', value: 'MEDIO' },
@@ -83,19 +98,37 @@ const alcances = [
 ]
 
 
-const cadastrar = async () => {
-    try {
-        await buildStore.cadastrarBuild(form.value)
-        router.push('/')
-        alert('Sucesso ao cadastrar build!')
 
-    }
-    catch (error) {
-        if (error.response?.data) {
-            errors.value = error.response.data
+const cadastrar = async () => {
+    if (!props.editando) {
+        try {
+            await buildStore.cadastrarBuild(form.value)
+            router.push('/')
+            alert('Sucesso ao cadastrar build!')
+
         }
-        else if (error.data) {
-            errors.value = error.data
+        catch (error) {
+            if (error.response?.data) {
+                errors.value = error.response.data
+            }
+            else if (error.data) {
+                errors.value = error.data
+            }
+        }
+    }
+    else {
+        try {
+            await buildStore.editarBuild(form.value, props.build.id)
+            emit('fechar-edicao')
+
+        }
+        catch (error) {
+            if (error.response?.data) {
+                errors.value = error.response.data
+            }
+            else if (error.data) {
+                errors.value = error.data
+            }
         }
     }
 
@@ -188,5 +221,35 @@ h1 {
     font-size: 0.9rem;
     margin-top: -15px;
     margin-bottom: 10px;
+}
+
+
+
+
+
+/* Esitlo para edição */
+.edicao-group {
+    width: 350px;
+    margin: 100px auto;
+
+}
+
+.edicao-group form {
+    max-width: 300px;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background: #0f291098;
+
+    color: #19db50;
+    box-shadow: 0px 0px 1px 0.5px white;
+
+}
+
+.edicao-group .cancelarEdicao {
+    background-color: #3f0808;
+    margin-top: 10px;
 }
 </style>
