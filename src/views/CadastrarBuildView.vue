@@ -16,7 +16,7 @@
 
 
             <label for="descricao">Descriação da build:</label>
-            <input v-model="form.description" id="descricao" type="text">
+            <input v-model="form.description" id="descricao" type="text" maxlength="200">
             <p v-if="errors.description" class="erro">{{ errors.description }}</p>
 
 
@@ -30,7 +30,7 @@
 
 
             <label for="codigo">Insira o codigo da build:</label>
-            <input v-model="form.code" id="codigo" type="text">
+            <input v-model="form.code" id="codigo" type="text" maxlength="80">
             <p v-if="errors.code" class="erro">{{ errors.code }}</p>
 
 
