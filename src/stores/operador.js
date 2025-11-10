@@ -1,30 +1,30 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
 
-export const useArmaStore = defineStore('arma', {
+export const useOperadorStore = defineStore('operador', {
 
     state: () => {
         return {
-            armas: [],
+            operadores: [],
         }
     },
 
     actions: {
-        async listarArmas() {
+        async listarOperadores() {
             try {
-                const response = await api.get('/arma')
-                this.armas = response.data
+                const response = await api.get('/operador')
+                this.operadores = response.data
             }
-            catch (error) { //ver isso aqui depois...
+            catch (error) {
                 console.log(error)
                 throw error;
             }
         },
 
-        async cadastrarArma(arma) {
+        async cadastrarOperador(operador) {
             try {
-                const response = await api.post('/arma', arma)
-                this.armas.push(response)
+                const response = await api.post('/operador', operador)
+                this.operadores.push(response)
             }
 
             catch (error) {

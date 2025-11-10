@@ -78,7 +78,7 @@ const form = ref({
 
 onMounted(() => {
     buildStore.listarTodasBuilds(),
-        armaStore.listarArmas()
+    armaStore.listarArmas()
 
     //se tiver uma build vindo de props, significa que é uma edição, então copia os dados da build para o formulario
     if (props.build) {

@@ -1,7 +1,7 @@
 <template>
     <div class="loadout-group">
       <div class="caixa-loadout" v-for="b in buildStore.builds" v-bind:key="b.id">
-        <div class="arma-img-group"> <img :src="armaTeste"></div>
+        <div class="arma-img-group"> <img :src="getWeaponImg(b.weaponId)"></div>
         <div class="text-group">
           <p><span class="nomeCampo">Arma: </span> {{ getWeaponName(b.weaponId) }} </p>
           <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
@@ -30,7 +30,6 @@ import { onMounted, ref } from 'vue';
 import { useBuildStore } from '@/stores/build';
 import { useArmaStore } from '@/stores/arma';
 import CadastrarBuildView from './CadastrarBuildView.vue';
-import armaTeste from '@/assets/arma-teste.webp'
 
 
 
@@ -50,11 +49,20 @@ onMounted(() => {
 
 
 
+
+
+
 //função que busca no state de armas de armaStore, o nome da arma que corresponde a build atraves do id que a build fornece
 function getWeaponName(weaponId) {
   const weapon = armaStore.armas.find(a => a.id === weaponId);
   return weapon ? weapon.name : 'Desconhecida'
 }
+
+  function getWeaponImg(weaponId){
+    const weapon = armaStore.armas.find(a => a.id === weaponId);
+    return weapon ? weapon.imgUrl : 'https://static.vecteezy.com/system/resources/thumbnails/001/198/850/small/weapon.png';
+}
+
 
 
 //Função que permite copiar o codigo 
