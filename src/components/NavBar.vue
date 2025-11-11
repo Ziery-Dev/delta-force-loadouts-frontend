@@ -12,14 +12,19 @@
           <span class="material-icons">add_box</span>
           cadastrar build
         </button>
-        
       </router-link>
+
       <router-link to="/cadastrar-arma">
         <button class="cadastro-button">
           <span class="material-icons">add_box</span>
           cadastrar arma
         </button>
-        
+      </router-link>
+      <router-link to="/cadastrar-operador">
+        <button class="cadastro-button">
+          <span class="material-icons">add_box</span>
+          cadastrar operador
+        </button>
       </router-link>
 
       <div class="search-box">

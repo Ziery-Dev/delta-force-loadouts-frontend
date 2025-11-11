@@ -8,7 +8,7 @@
             <p class="erro">{{ errors.erro }}</p>
 
             <label for="arma">Selecione a arma</label>
-            <select v-model="form.weaponId" name="arma" id="arma">
+            <select v-model="form.weaponId" name="arma" id="arma" required>
                 <option value=null disabled>Selecione...</option>
                 <option v-for="arma in armaStore.armas" :key="arma.id" :value="arma.id">{{ arma.name }}</option>
             </select>
@@ -16,13 +16,13 @@
 
 
             <label for="descricao">Descriação da build:</label>
-            <input v-model="form.description" id="descricao" type="text" maxlength="200">
+            <input v-model="form.description" id="descricao" type="text" maxlength="200" >
             <p v-if="errors.description" class="erro">{{ errors.description }}</p>
 
 
 
             <label for="alcance">Selecione o alcance:</label>
-            <select v-model="form.distance_range" name="alcance" id="alcance">
+            <select v-model="form.distance_range" name="alcance" id="alcance" required>
                 <option value=null disabled>Selecione...</option>
                 <option v-for="alcance in alcances" :key="alcance" :value="alcance.value">{{ alcance.label }}</option>
             </select>
