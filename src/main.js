@@ -4,14 +4,14 @@ import router from './router'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './stores/auth'
 
-const pinia = createPinia();
-const app = createApp(App);
-app.use(pinia);
-app.use(router);
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
 
-
-// 🔹 Chama o auto login antes de montar o app
 const authStore = useAuthStore()
+
+// 🔹 Garante que o axios receba o token antes de tudo
 authStore.tryAutoLogin()
 
-app.mount('#app');
+app.use(router)
+app.mount('#app')
