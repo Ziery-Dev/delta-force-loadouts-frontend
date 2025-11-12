@@ -3,6 +3,7 @@
       <div class="caixa-loadout" v-for="b in buildStore.builds" v-bind:key="b.id">
         <div class="arma-img-group"> <img :src="getWeaponImg(b.weaponId)"></div>
         <div class="text-group">
+          <p><span class="nomeCampo">Criada por: </span> {{ b.creatorUsername }} </p>
           <p><span class="nomeCampo">Arma: </span> {{ getWeaponName(b.weaponId) }} </p>
           <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
           <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
@@ -11,9 +12,8 @@
 
         <div class="button-group">
            <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
-          <button @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
-          <button @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
-
+          <button v-if="podeEditarOuRemover(b)"  @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
+          <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
         </div>
          
 
@@ -30,11 +30,13 @@ import { onMounted, ref } from 'vue';
 import { useBuildStore } from '@/stores/build';
 import { useArmaStore } from '@/stores/arma';
 import CadastrarBuildView from './CadastrarBuildView.vue';
+import { useAuthStore } from '@/stores/auth';
 
 
 
 const buildStore = useBuildStore();
 const armaStore = useArmaStore();
+const authStore = useAuthStore();
 
 
 const editando = ref(false)
@@ -43,8 +45,8 @@ const buildEmEdicao = ref(null)
 
 onMounted(() => {
   buildStore.listarTodasBuilds(),
-    armaStore.listarArmas()
-
+    armaStore.listarArmas(),
+    console.log(authStore.user)
 })
 
 
@@ -96,6 +98,17 @@ const editarBuild = async (build) => {
 function fecharSeClicouFora() {
   editando.value = false
 }
+
+const podeEditarOuRemover = (build) => {
+  const user = authStore.user
+  if (!user) return false
+
+  const isAdmin = user.role === 'ADMIN'
+  const isCriador = user.id === build.creatorId  
+
+  return isAdmin || isCriador
+}
+
 
 
 

@@ -11,20 +11,44 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(username, password) {
-      const res = await api.post('/auth/login', { username, password })
-      this.token = res.data.token
+      try {
+        const res = await api.post('/auth/login', { username, password })
+        this.token = res.data.token
 
-      localStorage.setItem('token', this.token)
-      api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+        localStorage.setItem('token', this.token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
 
-      this.decodeAndSetUser(this.token)
-      this.isAuthenticated = true
+        this.decodeAndSetUser(this.token)
+        this.isAuthenticated = true
+      }
+      catch (error) {
+        // Log detalhado para debug
+        console.error("Erro no login:", error)
+
+        // Trate de forma segura
+        if (error.response?.status === 400) {
+          alert("Usuário ou senha inválidos.")
+        }
+        else if (error.response?.status === 401) {
+          alert("Não autorizado. Verifique suas credenciais.")
+        }
+        else {
+          alert("Erro ao conectar com o servidor.")
+        }
+
+        // Importante: garantir que o estado não fique sujo
+        this.isAuthenticated = false
+        this.token = null
+        localStorage.removeItem('token')
+      }
     },
+
 
     decodeAndSetUser(token) {
       try {
         const decoded = jwtDecode(token)
         this.user = {
+          id: decoded.id,
           username: decoded.sub,
           roles: decoded.roles || []
         }
@@ -34,21 +58,26 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
- tryAutoLogin() {
-  const token = localStorage.getItem('token')
-  if (token) {
-    this.token = token
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    try {
-      const decoded = jwtDecode(token)
-      this.user = { username: decoded.sub } // 👈 aqui usamos o sub
-      this.isAuthenticated = true
-    } catch (error) {
-      console.error('Erro ao decodificar token:', error)
-      this.logout()
-    }
-  }
-},
+    tryAutoLogin() {
+      const token = localStorage.getItem('token')
+      if (token) {
+        this.token = token
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        try {
+          const decoded = jwtDecode(token)
+          this.user = {
+            id: decoded.id,
+            username: decoded.sub,
+            roles: decoded.role || decoded.roles || []
+          }
+          this.isAuthenticated = true
+        } catch (error) {
+          console.error('Erro ao decodificar token:', error)
+          this.logout()
+        }
+      }
+    },
+
 
 
     logout() {
@@ -63,4 +92,7 @@ export const useAuthStore = defineStore('auth', {
       return this.user?.roles?.includes(role)
     }
   }
+
+
+
 })
