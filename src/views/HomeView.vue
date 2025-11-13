@@ -109,9 +109,6 @@ const podeEditarOuRemover = (build) => {
   return isAdmin || isCriador
 }
 
-
-
-
 </script>
 
 <style scoped>

@@ -68,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = {
             id: decoded.id,
             username: decoded.sub,
-            roles: decoded.role || decoded.roles || []
+            role: decoded.roles || ''
           }
           this.isAuthenticated = true
         } catch (error) {
