@@ -6,6 +6,7 @@ export const useBuildStore = defineStore('build', {
     state: () => {
         return {
             builds: [],
+            minhas_builds: []
         }
     },
 
@@ -59,6 +60,18 @@ export const useBuildStore = defineStore('build', {
                 throw error
             }
 
+        },
+        
+        async listarMinhasBuilds(){
+            try{
+                const response = await api.get('/build/minhas-builds')
+                this.minhas_builds = response.data
+
+            }
+             catch (error) { 
+                console.log(error)
+                throw error;
+            }
         }
 
 

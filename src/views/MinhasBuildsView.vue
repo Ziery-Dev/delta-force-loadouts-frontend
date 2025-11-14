@@ -1,6 +1,6 @@
 <template> 
-<div class="minhas-builds-group">
-    
+<div >
+    <ListagemBuilds :builds="buildStore.minhas_builds"/>
 
 
 
@@ -12,7 +12,20 @@
 </template>
 
 
-<script>
+<script setup>
+
+import ListagemBuilds from '@/components/ListagemBuilds.vue';
+import { useBuildStore } from '@/stores/build';
+import { onMounted } from 'vue';
+
+
+const buildStore = useBuildStore();
+
+onMounted(()=>{
+    buildStore.listarMinhasBuilds()
+})
+
+ 
 
 
 

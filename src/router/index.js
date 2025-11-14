@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import CadastrarBuildView from '@/views/CadastrarBuildView.vue'
 import CadastrarArmaView from '@/views/CadastrarArmaView.vue'
 import CadastrarOperadorView from '@/views/CadastrarOperadorView.vue'
+import MinhasBuildsView from '@/views/MinhasBuildsView.vue'
 const routes = [
   {
     path: '/',
@@ -32,6 +33,13 @@ const routes = [
     path: '/cadastrar-operador',
     name: 'cadastrarOperador',
     component: CadastrarOperadorView,
+    meta: { requiresAuth: true },
+
+  },
+    {
+    path: '/minhas-builds',
+    name: 'minhasBuilds',
+    component: MinhasBuildsView,
     meta: { requiresAuth: true },
 
   },
