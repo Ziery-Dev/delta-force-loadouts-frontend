@@ -1,26 +1,28 @@
 <template>
-    <div class="loadout-group">
-      <div class="caixa-loadout" v-for="b in props.builds" v-bind:key="b.id">
-        <div class="arma-img-group"> <img :src="getWeaponImg(b.weaponId)"></div>
-        <div class="text-group">
-          <p><span class="nomeCampo">Criada por: </span> {{ b.creatorUsername }} </p>
-          <p><span class="nomeCampo">Arma: </span> {{ getWeaponName(b.weaponId) }} </p>
-          <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
-          <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
-          <p><span class="nomeCampo">Código: </span> {{ b.code }}</p>
-        </div>
-
-        <div class="button-group">
-          <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
-          <button v-if="podeEditarOuRemover(b)"  @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
-          <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
-          <button  :class="{favoritado: buildFavoritada(b.id)}" @click="addFavorito(b.id)">
-            <span class="material-icons">favorite</span>
-          </button>
-        </div>
-         
-
+  <div class="loadout-group">
+    <div class="caixa-loadout" v-for="b in props.builds" v-bind:key="b.id">
+      <div class="arma-img-group"> <img :src="getWeaponImg(b.weaponId)"></div>
+      <div class="text-group">
+        <p><span class="nomeCampo">Criada por: </span> {{ b.creatorUsername }} </p>
+        <p><span class="nomeCampo">Arma: </span> {{ getWeaponName(b.weaponId) }} </p>
+        <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
+        <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
+        <p><span class="nomeCampo">Código: </span> {{ b.code }}</p>
       </div>
+
+      <div class="button-group">
+        <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
+        <button v-if="podeEditarOuRemover(b)" @click="removerBuild(b.id)"><span
+            class="material-icons">delete</span></button>
+        <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span
+            class="material-icons">edit_document</span></button>
+        <button :class="{ favoritado: buildFavoritada(b.id) }" @click="toggleFavorito(b.id)">
+          <span class="material-icons">favorite</span>
+        </button>
+      </div>
+
+
+    </div>
 
     <div v-if="editando" class="editando-group" @click="fecharSeClicouFora">
       <cadastrar-build-view @click.stop :editando="editando" :build="buildEmEdicao" @fechar-edicao="editando = false" />
@@ -42,7 +44,7 @@ const props = defineProps({
     type: Array,
     required: true,
     // Garante que se for um array vazio, o valor padrão é []
-    default: () => [] 
+    default: () => []
   }
 })
 
@@ -74,9 +76,9 @@ function getWeaponName(weaponId) {
 
 }
 
-  function getWeaponImg(weaponId){
-    const weapon = armaStore.armas.find(a => a.id === weaponId);
-    return weapon ? weapon.imgUrl : 'https://static.vecteezy.com/system/resources/thumbnails/001/198/850/small/weapon.png';
+function getWeaponImg(weaponId) {
+  const weapon = armaStore.armas.find(a => a.id === weaponId);
+  return weapon ? weapon.imgUrl : 'https://static.vecteezy.com/system/resources/thumbnails/001/198/850/small/weapon.png';
 }
 
 
@@ -119,31 +121,34 @@ const podeEditarOuRemover = (build) => {
   if (!user) return false
 
   const isAdmin = user.role === 'ADMIN'
-  const isCriador = user.id === build.creatorId  
+  const isCriador = user.id === build.creatorId
 
   return isAdmin || isCriador
 }
 
 //Quando acionado, adiciona a build a lista de favoritos do usuário
-const addFavorito = async (buildId) =>{
-  try{
-    await favoritosStore.adicionarFavorito(buildId)
+const toggleFavorito = async (buildId) => {
+  try {
 
-      // Atualiza o estado local do store IMEDIATAMENTE para que o estado do botão de favoritos seja atualizado ao clicar
-    if (!favoritosStore.favoritos.some(f => f.id === buildId)) {
-      const build = buildStore.builds.find(b => b.id === buildId)
-      if (build) favoritosStore.favoritos.push(build)
+
+    if (!favoritosStore.favoritos.some(f => f.id === buildId)) { //verifica se a build atual ainda não pertence a favoritos
+      await favoritosStore.adicionarFavorito(buildId)
+      alert('adicionado a favoritos com sucesso!')
     }
-    alert('adicionado a favoritos com sucesso!' )
+    else{
+       await favoritosStore.removerFavorito(buildId)
+       alert("removido de favoritos")
+
+    }
   }
-   catch (error) {
+  catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
     alert(mensagem)
   }
 
 }
 
-//verifica se a build ja foi adiconado a fovoritos para mudar o estilo do botão de favoritos
+//verifica se a build ja foi adicionado a fovoritos para mudar o estilo do botão de favoritos
 const buildFavoritada = (id) => {
   return favoritosStore.favoritos.some(f => f.id === id)
 }
@@ -169,7 +174,7 @@ const buildFavoritada = (id) => {
   background-size: cover;
   background-position: center;
   width: 380px;
-  height:450px;
+  height: 450px;
   border-radius: 20px;
   transition: 0.4s;
   box-shadow: 0px 0px 1px 1px rgb(34, 172, 0);
@@ -181,7 +186,7 @@ const buildFavoritada = (id) => {
   box-shadow: 0px 0px 5px 0.4px white;
 }
 
-.text-group{
+.text-group {
   font-weight: bold;
   color: rgb(117, 228, 53);
   height: 50%;
@@ -197,14 +202,15 @@ const buildFavoritada = (id) => {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  
+
 }
-.text-group p{
+
+.text-group p {
   padding: 3px;
 }
 
-.nomeCampo{
-  color:rgb(216, 221, 221);
+.nomeCampo {
+  color: rgb(216, 221, 221);
 }
 
 
@@ -221,13 +227,13 @@ const buildFavoritada = (id) => {
   width: 60%;
 }
 
-.button-group{
-  
+.button-group {
+
   width: 100%;
   height: 15%;
   display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 
 }
 
@@ -243,7 +249,7 @@ const buildFavoritada = (id) => {
   transition: all 0.3s;
   box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
-  
+
 
 }
 
@@ -270,7 +276,7 @@ const buildFavoritada = (id) => {
 }
 
 
- /*estilo favoritado, quando a build ja foi adicionada a favorto*/
+/*estilo favoritado, quando a build ja foi adicionada a favorto*/
 .button-group .favoritado {
   color: white;
   box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);

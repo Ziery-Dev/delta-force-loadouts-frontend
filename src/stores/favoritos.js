@@ -16,17 +16,28 @@ export const useFavoritosStore = defineStore('favoritos', {
                 this.favoritos = response.data
 
             }
-            catch (error) { 
+            catch (error) {
                 console.log(error)
                 throw error;
             }
         },
         async adicionarFavorito(buildId) {
             try {
-              await api.post(`/users/favoritos/${buildId}`)
-            //   this.favoritos.push(response.data)        
+               const response =  await api.post(`/users/favoritos/${buildId}`)
+                this.favoritos.push(response.data)        
             }
-            catch (error) { 
+            catch (error) {
+                console.log(error)
+                throw error;
+            }
+        },
+
+        async removerFavorito(buildId) {
+            try {
+                await api.delete(`/users/favoritos/${buildId}`)
+                this.favoritos = this.favoritos.filter(build => build.id !== buildId)
+            }
+            catch (error) {
                 console.log(error)
                 throw error;
             }
