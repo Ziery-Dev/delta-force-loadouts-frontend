@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = {
           id: decoded.id,
           username: decoded.sub,
-          roles: decoded.roles || []
+          role: decoded.role || ''
         }
       } catch (e) {
         console.error('Erro ao decodificar token:', e)
@@ -68,7 +68,8 @@ export const useAuthStore = defineStore('auth', {
           this.user = {
             id: decoded.id,
             username: decoded.sub,
-            role: decoded.roles || ''
+            role: decoded.role || '',
+            buildsFavoritas: decoded.favoritesBuilds || []
           }
           this.isAuthenticated = true
         } catch (error) {

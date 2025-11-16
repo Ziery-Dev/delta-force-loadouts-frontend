@@ -6,6 +6,7 @@ import CadastrarBuildView from '@/views/CadastrarBuildView.vue'
 import CadastrarArmaView from '@/views/CadastrarArmaView.vue'
 import CadastrarOperadorView from '@/views/CadastrarOperadorView.vue'
 import MinhasBuildsView from '@/views/MinhasBuildsView.vue'
+import FavoritosView from '@/views/FavoritosView.vue'
 const routes = [
   {
     path: '/',
@@ -40,6 +41,13 @@ const routes = [
     path: '/minhas-builds',
     name: 'minhasBuilds',
     component: MinhasBuildsView,
+    meta: { requiresAuth: true },
+
+  },
+    {
+    path: '/favoritos',
+    name: 'favoritos',
+    component: FavoritosView,
     meta: { requiresAuth: true },
 
   },

@@ -11,9 +11,12 @@
         </div>
 
         <div class="button-group">
-           <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
+          <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
           <button v-if="podeEditarOuRemover(b)"  @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
           <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
+          <button  :class="{favoritado: buildFavoritada(b.id)}" @click="addFavorito(b.id)">
+            <span class="material-icons">favorite</span>
+          </button>
         </div>
          
 
@@ -31,6 +34,7 @@ import { useBuildStore } from '@/stores/build';
 import { useArmaStore } from '@/stores/arma';
 import CadastrarBuildView from '@/views/CadastrarBuildView.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useFavoritosStore } from '@/stores/favoritos';
 
 
 const props = defineProps({
@@ -47,19 +51,19 @@ const props = defineProps({
 const buildStore = useBuildStore();
 const armaStore = useArmaStore();
 const authStore = useAuthStore();
+const favoritosStore = useFavoritosStore()
 
 
 const editando = ref(false)
 const buildEmEdicao = ref(null)
 
 
-onMounted(() => {
-    armaStore.listarArmas(),
-    console.log(authStore.user)
+onMounted(async () => {
+  await armaStore.listarArmas()
+  await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
+
+  console.log("Favoritos carregados:", favoritosStore.favoritos)
 })
-
-
-
 
 
 
@@ -109,6 +113,7 @@ function fecharSeClicouFora() {
   editando.value = false
 }
 
+//decide se o usuário atual é admino ou criador da build, para exibir os botões de excluir e editar
 const podeEditarOuRemover = (build) => {
   const user = authStore.user
   if (!user) return false
@@ -117,6 +122,30 @@ const podeEditarOuRemover = (build) => {
   const isCriador = user.id === build.creatorId  
 
   return isAdmin || isCriador
+}
+
+//Quando acionado, adiciona a build a lista de favoritos do usuário
+const addFavorito = async (buildId) =>{
+  try{
+    await favoritosStore.adicionarFavorito(buildId)
+
+      // Atualiza o estado local do store IMEDIATAMENTE para que o estado do botão de favoritos seja atualizado ao clicar
+    if (!favoritosStore.favoritos.some(f => f.id === buildId)) {
+      const build = buildStore.builds.find(b => b.id === buildId)
+      if (build) favoritosStore.favoritos.push(build)
+    }
+    alert('adicionado a favoritos com sucesso!' )
+  }
+   catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+    alert(mensagem)
+  }
+
+}
+
+//verifica se a build ja foi adiconado a fovoritos para mudar o estilo do botão de favoritos
+const buildFavoritada = (id) => {
+  return favoritosStore.favoritos.some(f => f.id === id)
 }
 
 </script>
@@ -238,5 +267,13 @@ const podeEditarOuRemover = (build) => {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 8px;
+}
+
+
+ /*estilo favoritado, quando a build ja foi adicionada a favorto*/
+.button-group .favoritado {
+  color: white;
+  box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
+
 }
 </style>

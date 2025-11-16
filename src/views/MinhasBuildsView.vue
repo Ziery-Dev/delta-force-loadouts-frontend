@@ -1,5 +1,6 @@
 <template> 
 <div >
+    <h2 v-if="buildStore.minhas_builds.length === 0">Opa, parece que você ainda não possui buids cadastradas!</h2>
     <ListagemBuilds :builds="buildStore.minhas_builds"/>
 
 
@@ -20,6 +21,7 @@ import { onMounted } from 'vue';
 
 
 const buildStore = useBuildStore();
+
 
 onMounted(()=>{
     buildStore.listarMinhasBuilds()
