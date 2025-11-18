@@ -16,7 +16,7 @@
             class="material-icons">delete</span></button>
         <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span
             class="material-icons">edit_document</span></button>
-        <button :class="{ favoritado: buildFavoritada(b.id) }" @click="toggleFavorito(b.id)">
+        <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }" @click="toggleFavorito(b.id)">
           <span class="material-icons">favorite</span>
         </button>
       </div>
@@ -62,8 +62,10 @@ const buildEmEdicao = ref(null)
 
 onMounted(async () => {
   await armaStore.listarArmas()
-  await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
+  if(authStore.isAuthenticated){ //Impede que o edpoint seja chamado caso o usuário não esteja logado
+    await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
 
+  }
   console.log("Favoritos carregados:", favoritosStore.favoritos)
 })
 

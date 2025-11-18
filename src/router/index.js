@@ -7,44 +7,51 @@ import CadastrarArmaView from '@/views/CadastrarArmaView.vue'
 import CadastrarOperadorView from '@/views/CadastrarOperadorView.vue'
 import MinhasBuildsView from '@/views/MinhasBuildsView.vue'
 import FavoritosView from '@/views/FavoritosView.vue'
+import RequisicaoLogin from '@/components/RequisicaoLogin.vue'
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
-    meta: { requiresAuth: true },
+
 
   },
   {
     path: '/cadastrar-build',
     name: 'cadastrarBuild',
     component: CadastrarBuildView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: TransformStreamDefaultController},
 
   },
 
-    {
+  {
     path: '/cadastrar-arma',
     name: 'cadastrarArma',
     component: CadastrarArmaView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true,  requiredRole: "ADMIN"  },
 
   },
-    {
+  {
     path: '/cadastrar-operador',
     name: 'cadastrarOperador',
     component: CadastrarOperadorView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
 
   },
-    {
+  {
     path: '/minhas-builds',
     name: 'minhasBuilds',
     component: MinhasBuildsView,
     meta: { requiresAuth: true },
 
   },
-    {
+  {
+    path: '/requisicao-login',
+    name: 'requisicaoLogin',
+    component: RequisicaoLogin,
+
+  },
+  {
     path: '/favoritos',
     name: 'favoritos',
     component: FavoritosView,
@@ -59,7 +66,7 @@ const routes = [
     name: "login",
     component: LoginView,
   },
- 
+
 ]
 
 
@@ -68,18 +75,25 @@ const router = createRouter({
   routes
 });
 
+
 //Se tentar acessar uma rota marcada com  "meta: { requiresAuth: true }," é redirecionado para login
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    return next('/login')
+    return next('/requisicao-login')
   }
-  
+
+
+  if (to.meta.requiredRole && auth.user?.role !== to.meta.requiredRole) {
+  return next("/") //adicionar um forbbiden aqui futuramente
+}
+
+
   // Impede abrir /login se já estiver logado
   if (to.name === 'login' && auth.isAuthenticated) {
-    return next({ name: 'home' }) 
+    return next({ name: 'home' })
   }
-    next()  // permite navegar normalmente
+  next()  // permite navegar normalmente
 })
 
 export default router

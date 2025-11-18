@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authStore.isAuthenticated" class="nav-group">
+  <div class="nav-group">
     <nav>
       <router-link to="/">
         <button class="home-button">
@@ -24,7 +24,6 @@
 
 
        <div 
-    v-if="authStore.isAuthenticated" 
     class="user-menu" 
     ref="menuRef"
   >
@@ -35,15 +34,16 @@
     </div>
 
     <div v-if="menuAberto" class="dropdown">
-      <router-link to="/cadastrar-operador">
-        <button class="dropdown-item">
+
+      <router-link to="/cadastrar-operador" >  <!--Exclusivo de usuário admin-->
+        <button  v-if="authStore.user?.role === 'ADMIN'"  class="dropdown-item" >
           <span class="material-icons">person_add</span>
           cadastrar operador
         </button>
       </router-link>
 
       <router-link to="/cadastrar-arma">
-        <button class="dropdown-item">
+        <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">  <!--Exclusivo de usuário admin-->
           <span class="material-icons">add_box</span>
           cadastrar arma
         </button>
@@ -63,7 +63,14 @@
         </button>
       </router-link>
 
-      <button @click="sairDaConta" class="dropdown-item">
+      <router-link to="/login">
+        <button v-if="!authStore.isAuthenticated" class="dropdown-item">  
+          <span class="material-icons">login</span>
+          Faça login
+        </button>
+      </router-link>
+
+      <button v-if="authStore.isAuthenticated" @click="sairDaConta" class="dropdown-item">
         <span class="material-icons">logout</span>
         Sair
       </button>
