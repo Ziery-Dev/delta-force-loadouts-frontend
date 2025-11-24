@@ -8,6 +8,7 @@
         <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
         <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
         <p><span class="nomeCampo">Código: </span> {{ b.code }}</p>
+        <p><span class="nomeCampo">Criação: </span> {{ b.createdAt }}</p>
       </div>
 
       <div class="button-group">
@@ -16,8 +17,17 @@
             class="material-icons">delete</span></button>
         <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span
             class="material-icons">edit_document</span></button>
-        <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }" @click="toggleFavorito(b.id)">
+        <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }"
+          @click="toggleFavorito(b.id)">
           <span class="material-icons">favorite</span>
+        </button>
+      </div>
+      <div class="like-group">
+        <button @click="avaliarBuild(b.id, 1)" :class="{ ativo: b.likedByUser }">
+          <span  class="material-icons" >thumb_up</span>
+        </button>
+        <button @click="avaliarBuild(b.id, -1)" :class="{ ativo: b.dislikedByUser }">
+          <span  class="material-icons like-deslike">thumb_down</span>
         </button>
       </div>
 
@@ -62,10 +72,10 @@ const buildEmEdicao = ref(null)
 
 onMounted(async () => {
   await armaStore.listarArmas()
-  if(authStore.isAuthenticated){ //Impede que o edpoint seja chamado caso o usuário não esteja logado
+  if (authStore.isAuthenticated) { //Impede que o edpoint seja chamado caso o usuário não esteja logado
     await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
-
   }
+  console.log("listBuild", buildStore.builds)
   console.log("Favoritos carregados:", favoritosStore.favoritos)
 })
 
@@ -117,7 +127,7 @@ function fecharSeClicouFora() {
   editando.value = false
 }
 
-//decide se o usuário atual é admino ou criador da build, para exibir os botões de excluir e editar
+//decide se o usuário atual é admin ou criador da build, para exibir os botões de excluir e editar
 const podeEditarOuRemover = (build) => {
   const user = authStore.user
   if (!user) return false
@@ -137,9 +147,9 @@ const toggleFavorito = async (buildId) => {
       await favoritosStore.adicionarFavorito(buildId)
       alert('adicionado a favoritos com sucesso!')
     }
-    else{
-       await favoritosStore.removerFavorito(buildId)
-       alert("removido de favoritos")
+    else {
+      await favoritosStore.removerFavorito(buildId)
+      alert("removido de favoritos")
 
     }
   }
@@ -149,6 +159,29 @@ const toggleFavorito = async (buildId) => {
   }
 
 }
+
+//Simplemente função que diz se o usuário avaliou a build com like
+const avaliarBuild = async (buildId, valor) => {
+  let acao
+
+  if (valor === 1) {
+    acao = buildStore.darLike
+  } else if (valor === -1) {
+    acao = buildStore.disLike
+  } else {
+    alert("Erro inesperado")
+    return
+  }
+
+  try {
+    await acao(buildId)
+    alert("voto computado")
+  } catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+    alert(mensagem)
+  }
+}
+
 
 //verifica se a build ja foi adicionado a fovoritos para mudar o estilo do botão de favoritos
 const buildFavoritada = (id) => {
@@ -191,7 +224,7 @@ const buildFavoritada = (id) => {
 .text-group {
   font-weight: bold;
   color: rgb(117, 228, 53);
-  height: 50%;
+  height: 48%;
 
   /*Quebra de linha do texto */
   word-wrap: break-word;
@@ -232,10 +265,11 @@ const buildFavoritada = (id) => {
 .button-group {
 
   width: 100%;
-  height: 15%;
+  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
+
 
 }
 
@@ -251,8 +285,6 @@ const buildFavoritada = (id) => {
   transition: all 0.3s;
   box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
-
-
 }
 
 .button-group button:hover {
@@ -261,6 +293,38 @@ const buildFavoritada = (id) => {
   color: #ffffff;
 }
 
+
+/* Estilo botões like e deslike */
+.like-group {
+  margin-top: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+
+.like-group button {
+  height: 30px;
+  margin: 0 5px;
+  color: rgb(13, 212, 72);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+
+}
+
+.like-group button:hover {
+  transform: scale(1.1);
+  color: #ffffff;
+}
+
+.like-group .ativo {
+  transform: scale(1.1);
+  color: #ffffff;
+}
 
 
 /*Estilo editando*/
