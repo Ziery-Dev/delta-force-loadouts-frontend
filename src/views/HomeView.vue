@@ -9,8 +9,17 @@
         <option value="likes&order=desc">Mais likes</option>
         <option value="likes&order=asc">Menos likes</option>
       </select>
-
     </div>
+    <div class="filtrar-group">
+    <label for="alcance">Filtrar: </label>
+    <select v-model="form.alcance" id="alcance">
+      <option value="">Todos</option>
+      <option v-for="a in alcances" :key="a.value" :value="a.value">
+        {{ a.label }}
+      </option>
+    </select>
+    </div>
+
 
     <ListagemBuilds :builds="buildStore.builds" />
 
@@ -35,35 +44,50 @@ onMounted(() => {
 })
 
 
-const form = ref({ ordem: 'date&order=desc' })
+const form = ref({ ordem: 'date&order=desc', alcance: '' })
 
 //observa mudança no select de ordem para alterar
-watch(() => form.value.ordem, (novaOrdem) => {
-  buildStore.listarBuilds(novaOrdem)
+watch([
+  () => form.value.ordem,
+  () => form.value.alcance
+], ([novaOrdem, novosAlcances]) => {
+
+  //cada alcancace é adicionado: &distanceRange= + o tipo de alcance
+  const alcanceParams = `&distanceRange=${novosAlcances}`
+    
+
+  //junta os alcances a ordem para ir para a url
+  const params = `${novaOrdem}${alcanceParams}`;
+  buildStore.listarBuilds(params);
+
+  console.log(params)
+
 })
+
+const alcances = [
+  { label: 'Curto alcance', value: 'CURTO' },
+  { label: 'Médio alcance', value: 'MEDIO' },
+  { label: 'Longo alcance', value: 'LONGE' },
+  { label: 'Muito longo', value: 'MUITO_LONGE' }
+]
 
 
 
 </script>
 
 <style scoped>
-  .ordenar-group{
-    display: inline;
-    border-radius: 5px;
-    padding: 5px;
-    color: #ffffff;
+.ordenar-group, .filtrar-group {
+  display: inline;
+  border-radius: 5px;
+  padding: 5px;
+  color: #ffffff;
 
-  }
+}
 
-  .ordenar-group select{
-    background-color: #19db50;
-    display: inline;
-    border-radius: 5px;
+.ordenar-group select,  .filtrar-group select {
+  background-color: #19db50;
+  display: inline;
+  border-radius: 5px;
 
-  }
-
-  
-
-
-
+}
 </style>

@@ -75,8 +75,7 @@ onMounted(async () => {
   if (authStore.isAuthenticated) { //Impede que o edpoint seja chamado caso o usuário não esteja logado
     await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
   }
-  console.log("listBuild", buildStore.builds)
-  console.log("Favoritos carregados:", favoritosStore.favoritos)
+ 
 })
 
 
