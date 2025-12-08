@@ -38,6 +38,7 @@
       <cadastrar-build-view @click.stop :editando="editando" :build="buildEmEdicao" @fechar-edicao="editando = false" />
     </div>
   </div>
+
 </template>
 
 <script setup>

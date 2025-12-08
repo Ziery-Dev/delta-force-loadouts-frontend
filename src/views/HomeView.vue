@@ -3,25 +3,44 @@
   <div>
     <div class="ordenar-group">
       <label for="odernar">Ordenar por: </label>
-      <select v-model="form.ordem" name="odernar" id="odernar">
-        <option value="date&order=desc">Mais recentes</option>
-        <option value="date&order=asc">Mais antigas</option>
-        <option value="likes&order=desc">Mais likes</option>
-        <option value="likes&order=asc">Menos likes</option>
+      <select v-model="form.ordem">
+        <option :value="{ sort: 'createdAt', order: 'desc' }">Mais recentes</option>
+        <option :value="{ sort: 'createdAt', order: 'asc' }">Mais antigas</option>
+        <option :value="{ sort: 'likeCount', order: 'desc' }">Mais likes</option>
+        <option :value="{ sort: 'dislikeCount', order: 'desc' }">Mais dislikes</option>
       </select>
     </div>
     <div class="filtrar-group">
-    <label for="alcance">Filtrar: </label>
-    <select v-model="form.alcance" id="alcance">
-      <option value="">Todos</option>
-      <option v-for="a in alcances" :key="a.value" :value="a.value">
-        {{ a.label }}
-      </option>
-    </select>
+      <label for="alcance">Filtrar: </label>
+      <select v-model="form.alcance" id="alcance">
+        <option value="">Todos</option>
+        <option v-for="a in alcances" :key="a.value" :value="a.value">
+          {{ a.label }}
+        </option>
+      </select>
     </div>
 
 
     <ListagemBuilds :builds="buildStore.builds" />
+    <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg" :anteriorPg="anteriorPg"  />
+
+
+    <!-- ################ Pode virar um componente -->
+    <!-- <div class="pagination">
+
+      <button class="arrow-button" @click="anteriorPg()" :disabled="buildStore.currentPage === 0">
+        <span class="material-icons">arrow_circle_left</span>
+      </button>
+
+      <span>Página {{ buildStore.currentPage + 1 }} de {{ buildStore.totalPages }}</span>
+
+      <button class="arrow-button" @click="proximaPg()"
+        :disabled="buildStore.currentPage + 1 === buildStore.totalPages">
+        <span class="material-icons">arrow_circle_right</span>
+
+      </button>
+
+    </div> -->
 
 
   </div>
@@ -33,36 +52,43 @@
 
 <script setup>
 import ListagemBuilds from '@/components/ListagemBuilds.vue';
+import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { useBuildStore } from '@/stores/build';
 import { onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 const buildStore = useBuildStore()
 
 //Carrega todas a builds antes de passar via props para listagem de builds
 onMounted(() => {
-  buildStore.listarBuilds(form.value.ordem)
-})
+  buildStore.listarBuilds({
+    sort: form.value.ordem.sort,
+    order: form.value.ordem.order,
+    alcance: form.value.alcance,
+    page: 0
+  });
+});
 
 
-const form = ref({ ordem: 'date&order=desc', alcance: '' })
-
+const form = ref({
+  ordem: { sort: 'createdAt', order: 'desc' },
+  alcance: ''
+});
 //observa mudança no select de ordem para alterar
 watch([
   () => form.value.ordem,
   () => form.value.alcance
-], ([novaOrdem, novosAlcances]) => {
+], ([ordem, alcance]) => {
 
-  //cada alcancace é adicionado: &distanceRange= + o tipo de alcance
-  const alcanceParams = `&distanceRange=${novosAlcances}`
-    
+  buildStore.listarBuilds({
+    sort: ordem.sort,
+    order: ordem.order,
+    alcance,
+    page: 0
+  });
 
-  //junta os alcances a ordem para ir para a url
-  const params = `${novaOrdem}${alcanceParams}`;
-  buildStore.listarBuilds(params);
-
-  console.log(params)
-
-})
+  console.log({ ordem, alcance });
+});
 
 const alcances = [
   { label: 'Curto alcance', value: 'CURTO' },
@@ -72,11 +98,33 @@ const alcances = [
 ]
 
 
+//###########################pode virar so uma função
+const proximaPg = () => {
+  buildStore.listarBuilds({
+    sort: form.value.ordem.sort,
+    order: form.value.ordem.order,
+    alcance: form.value.alcance,
+    page: buildStore.currentPage + 1
+  })
+}
+const anteriorPg = () => {
+  buildStore.listarBuilds({
+    sort: form.value.ordem.sort,
+    order: form.value.ordem.order,
+    alcance: form.value.alcance,
+    page: buildStore.currentPage - 1
+  })
+}
+
+
+const { currentPage, totalPages } = storeToRefs(buildStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
+
 
 </script>
 
 <style scoped>
-.ordenar-group, .filtrar-group {
+.ordenar-group,
+.filtrar-group {
   display: inline;
   border-radius: 5px;
   padding: 5px;
@@ -84,10 +132,13 @@ const alcances = [
 
 }
 
-.ordenar-group select,  .filtrar-group select {
+.ordenar-group select,
+.filtrar-group select {
   background-color: #19db50;
   display: inline;
   border-radius: 5px;
 
 }
+
+
 </style>

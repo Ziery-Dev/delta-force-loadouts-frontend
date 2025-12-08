@@ -126,7 +126,6 @@ onBeforeUnmount(() => {
 /* 🔹 Barra de navegação */
 .nav-group {
   background-color: #0f2910;
-  /* verde escuro */
   display: flex;
   justify-content: center;
   align-items: center;

@@ -6,22 +6,24 @@ export const useBuildStore = defineStore('build', {
     state: () => {
         return {
             builds: [],
-            minhas_builds: []
+            minhas_builds: [],
+            currentPage: 0,
+            totalPages: 0,
         }
     },
 
     actions: {
-        async listarTodasBuilds() {
-            try {
-                const response = await api.get('/build')
-                this.builds = response.data
-            }
-            catch (error) { //ver isso aqui depois...
-                console.log(error)
-                throw error;
-            }
+        // async listarTodasBuilds() {
+        //     try {
+        //         const response = await api.get('/build')
+        //         this.builds = response.data
+        //     }
+        //     catch (error) { //ver isso aqui depois...
+        //         console.log(error)
+        //         throw error;
+        //     }
 
-        },
+        // },
 
         async cadastrarBuild(build) {
             try {
@@ -62,16 +64,20 @@ export const useBuildStore = defineStore('build', {
 
         },
 
-        async listarMinhasBuilds() {
+        async listarMinhasBuilds(page = 0, size = 10, sort = 'createdAt,desc') {
             try {
-                const response = await api.get('/build/minhas-builds')
-                this.minhas_builds = response.data
+                const response = await api.get(`/build/minhas-builds?page=${page}&size=${size}&sort=${sort}`)
+              
+                this.minhas_builds = response.data.content
+                this.totalPages = response.data.totalPages;
+                this.currentPage = response.data.number; 
 
             }
             catch (error) {
                 console.log(error)
                 throw error;
             }
+     
         },
 
         async darLike(buildId) {
@@ -114,17 +120,32 @@ export const useBuildStore = defineStore('build', {
         },
 
 
-        async listarBuilds(ordem){
+        async listarBuilds({ sort, order, alcance, page, size = 10 }) {
             try {
-                const response = await api.get(`/build?sort=${ordem}`)
-                this.builds = response.data
+                const response = await api.get('/build', {
+                    params: {
+                        page,
+                        size,
+                        sort,
+                        order,
+                        distanceRange: alcance || null
+                    }
+                });
+
+                this.builds = response.data.content;
+                this.totalPages = response.data.totalPages;
+                this.currentPage = response.data.number;
             }
             catch (error) {
-                console.log(error)
+                console.log(error);
                 throw error;
             }
+        },
 
+        proximaPag (){
+            this.currentPage += 1
         }
+
 
 
 
