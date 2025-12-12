@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-group">
+  <div v-if="!ocultarNavbar.includes(route.path)" class="nav-group">
     <nav>
       <router-link to="/">
         <button class="home-button">
@@ -23,59 +23,56 @@
 
 
 
-       <div 
-    class="user-menu" 
-    ref="menuRef"
-  >
-    <div class="user-info" @click="toggleMenu">
-      <span class="material-icons">account_circle</span>
-      <span class="username">{{ authStore.user?.username || 'Usuário' }}</span>
-      <span class="material-icons arrow" :class="{ open: menuAberto }">expand_more</span>
-    </div>
+      <div class="user-menu" ref="menuRef">
+        <div class="user-info" @click="toggleMenu">
+          <span class="material-icons">account_circle</span>
+          <span class="username">{{ authStore.user?.username || 'Usuário' }}</span>
+          <span class="material-icons arrow" :class="{ open: menuAberto }">expand_more</span>
+        </div>
 
-    <div v-if="menuAberto" class="dropdown">
+        <div v-if="menuAberto" class="dropdown">
 
-      <router-link to="/cadastrar-operador" >  <!--Exclusivo de usuário admin-->
-        <button  v-if="authStore.user?.role === 'ADMIN'"  class="dropdown-item" >
-          <span class="material-icons">person_add</span>
-          cadastrar operador
-        </button>
-      </router-link>
+          <router-link to="/cadastrar-operador"> <!--Exclusivo de usuário admin-->
+            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
+              <span class="material-icons">person_add</span>
+              cadastrar operador
+            </button>
+          </router-link>
 
-      <router-link to="/cadastrar-arma">
-        <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">  <!--Exclusivo de usuário admin-->
-          <span class="material-icons">add_box</span>
-          cadastrar arma
-        </button>
-      </router-link>
+          <router-link to="/cadastrar-arma">
+            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item"> <!--Exclusivo de usuário admin-->
+              <span class="material-icons">add_box</span>
+              cadastrar arma
+            </button>
+          </router-link>
 
-      <router-link to="/minhas-builds">
-        <button class="dropdown-item">
-          <span class="material-icons">assignment</span>
-          Minhas builds
-        </button>
-      </router-link>
+          <router-link to="/minhas-builds">
+            <button class="dropdown-item">
+              <span class="material-icons">assignment</span>
+              Minhas builds
+            </button>
+          </router-link>
 
-      <router-link to="/favoritos">
-        <button class="dropdown-item">
-          <span class="material-icons">favorite</span>
-          Favoritos
-        </button>
-      </router-link>
+          <router-link to="/favoritos">
+            <button class="dropdown-item">
+              <span class="material-icons">favorite</span>
+              Favoritos
+            </button>
+          </router-link>
 
-      <router-link to="/login">
-        <button v-if="!authStore.isAuthenticated" class="dropdown-item">  
-          <span class="material-icons">login</span>
-          Faça login
-        </button>
-      </router-link>
+          <router-link to="/login">
+            <button v-if="!authStore.isAuthenticated" class="dropdown-item">
+              <span class="material-icons">login</span>
+              Faça login
+            </button>
+          </router-link>
 
-      <button v-if="authStore.isAuthenticated" @click="sairDaConta" class="dropdown-item">
-        <span class="material-icons">logout</span>
-        Sair
-      </button>
-    </div>
-  </div>
+          <button v-if="authStore.isAuthenticated" @click="sairDaConta" class="dropdown-item">
+            <span class="material-icons">logout</span>
+            Sair
+          </button>
+        </div>
+      </div>
 
     </nav>
   </div>
@@ -83,7 +80,7 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted, onBeforeUnmount } from 'vue';
 
@@ -91,22 +88,28 @@ const authStore = useAuthStore()
 const router = useRouter()
 const menuAberto = ref(false)
 const menuRef = ref(null)
+const route = useRoute()
+
+//rotas onde o navbar não irá aparecer
+const ocultarNavbar = ['/login', '/registro']
 
 
 
 
+//abre e fecha menu de perfil do usuario 
 const toggleMenu = () => {
   menuAberto.value = !menuAberto.value
 }
 
 
-// Fecha menu ao clicar fora
+// Fecha menu de usuario ao clicar fora
 const handleClickFora = (event) => {
   if (menuRef.value && !menuRef.value.contains(event.target)) {
     menuAberto.value = false
   }
 }
 
+//Simplemente sai da conta
 const sairDaConta = () => {
   authStore.logout()
   router.push('/login')

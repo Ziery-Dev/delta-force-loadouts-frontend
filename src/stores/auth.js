@@ -22,6 +22,7 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = true
       }
       catch (error) {
+        /*
         // Log detalhado para debug
         console.error("Erro no login:", error)
 
@@ -35,11 +36,16 @@ export const useAuthStore = defineStore('auth', {
         else {
           alert("Erro ao conectar com o servidor.")
         }
-
-        // Importante: garantir que o estado não fique sujo
+           */
+          // Importante: garantir que o estado não fique sujo
         this.isAuthenticated = false
         this.token = null
         localStorage.removeItem('token')
+
+        console.log(error)
+        throw error;
+
+   
       }
     },
 

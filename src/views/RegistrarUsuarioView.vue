@@ -1,29 +1,32 @@
 <template>
     <div class="background-container">
-        <h1>Faça login</h1>
+        <h1>Registre-se</h1>
         <div class="form-group">
-            <form @submit.prevent="fazerLogin">
+            <form @submit.prevent="cadastrar">
+                <p class="erro">{{ errors.erro }}</p>
 
-                <p v-if="errors.global" class="erro">{{ errors.global }}</p>
 
-                <label for="username">Usuário</label>
-                <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" />
+                <label for="username">Nome de usuário</label>
+                <input type="text" v-model="form.username" id="username" placeholder="Seu nome de usuário" maxlength="30"  required>
+                <p v-if="errors.username" class="erro">{{ errors.username }}</p>
 
+                <label for="email">E-mail de recuperação</label>
+                <input type="text" v-model="form.email" id="email" placeholder="Seu e-mail" maxlength="254"  required>
+                <p v-if="errors.email" class="erro">{{ errors.email }}</p>
 
 
                 <label for="password">Senha</label>
-                <input id="password" v-model="password" type="password" placeholder="Digite sua senha" />
+                <input type="password" v-model="form.password" id="password" placeholder="Criar senha" maxlength="72" required>
+                <p v-if="errors.password" class="erro">{{ errors.password }}</p>
 
-
-                <button type="submit">
-                    Entrar
-                </button>
-
+                <label for="confirmar">Confirmar senha</label>
+                <input type="password" v-model="form.confirmar" id="confirmar" placeholder="Repita sua senha" maxlength="72" required>
+                <button type="submit">Cadastrar</button>
             </form>
-            <div class="cadastrar">
+            <div class="voltar-login">
                 <p>ou</p>
-                <RouterLink to="/registro">
-                    <p>cadastre-se</p>
+                <RouterLink to="/login">
+                    <p>voltar ao login</p>
                 </RouterLink>
             </div>
 
@@ -34,42 +37,51 @@
     </div>
 
 
-
 </template>
 
+
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
-import { ref } from "vue"
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/user';
 
-const router = useRouter();
-const authStore = useAuthStore();
-const username = ref("");
-const password = ref("");
+const userStore = useUserStore()
 
 
-const errors = ref({})
 
-const fazerLogin = async () => {
-    errors.value = {}
+
+
+// dessa forma para poder limpar o formulário
+const initialForm = { username: '', email: '', password: '', confirmar: '' }
+const form = ref({ ...initialForm })
+
+const errors = ref({});
+
+
+const cadastrar = async () => {
     try {
-        await authStore.login(username.value, password.value);
-        router.push("/"); // redireciona após login
-    } catch (error) {
-        const data = error.response?.data
-
-        if (data?.erro) {
-            errors.value.global = data.erro
-        } else if (data?.message) {
-            errors.value.global = data.message
-        } else {
-            errors.value.global = "Falha ao realizar login."
+        if(form.value.password !== form.value.confirmar){   
+            errors.value.erro = "Confirmação de senha não bate com a senha fornecida!"
+            return
+        }
+        await userStore.cadastrarUsuario(form.value)
+        alert("sucesso ao cadastrar usuário")
+    }
+    catch (error) {
+        console.log(error.response?.data)
+        if (error.response?.data) {
+            errors.value = error.response.data
+        } else if (error.data) {
+            errors.value = error.data
         }
     }
+
 }
 
 
+
 </script>
+
+
 <style scoped>
 .background-container {
     height: 100%;
@@ -105,6 +117,7 @@ const fazerLogin = async () => {
     flex-direction: column;
 
 }
+
 
 .form-group {
     background: rgba(30, 30, 30, 0.85);
@@ -161,16 +174,6 @@ label {
     margin-bottom: 10px;
 }
 
-.cadastrar p {
-    margin-bottom: 20px;
-}
-
-.cadastrar a {
-    margin-top: 200px;
-    color: #19db50;
-    text-decoration: none;
-}
-
 h1 {
     margin-top: 100px;
     margin-bottom: 10px;
@@ -178,8 +181,15 @@ h1 {
     background: rgb(30, 30, 30);
     border-radius: 5px;
     padding: 10px;
+}
 
+.voltar-login p {
+    margin: 20px;
+}
 
+.voltar-login a {
+    color: #19db50;
+    text-decoration: none;
 }
 
 .erro {
