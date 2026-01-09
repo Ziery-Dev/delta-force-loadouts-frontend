@@ -53,6 +53,13 @@
             </button>
           </router-link>
 
+          <router-link to="/listar-usuarios">
+            <button  v-if="authStore.user?.role === 'ADMIN'"  class="dropdown-item">
+              <span class="material-icons">groups</span>
+              Listar usuários     
+            </button> 
+          </router-link>
+
           <router-link to="/favoritos">
             <button class="dropdown-item">
               <span class="material-icons">favorite</span>

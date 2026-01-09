@@ -22,21 +22,6 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = true
       }
       catch (error) {
-        /*
-        // Log detalhado para debug
-        console.error("Erro no login:", error)
-
-        // Trate de forma segura
-        if (error.response?.status === 400) {
-          alert("Usuário ou senha inválidos.")
-        }
-        else if (error.response?.status === 401) {
-          alert("Não autorizado. Verifique suas credenciais.")
-        }
-        else {
-          alert("Erro ao conectar com o servidor.")
-        }
-           */
           // Importante: garantir que o estado não fique sujo
         this.isAuthenticated = false
         this.token = null

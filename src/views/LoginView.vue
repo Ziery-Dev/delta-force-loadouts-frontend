@@ -1,41 +1,40 @@
 <template>
-    <div class="background-container">
-        <h1>Faça login</h1>
-        <div class="form-group">
-            <form @submit.prevent="fazerLogin">
+    <main class="login-page">
+        <section class="login-card">
+            <h1 class="login-title">Faça login</h1>
 
-                <p v-if="errors.global" class="erro">{{ errors.global }}</p>
+            <form class="login-form" @submit.prevent="fazerLogin">
+                <p v-if="errors.global" class="erro" role="alert">
+                    {{ errors.global }}
+                </p>
 
-                <label for="username">Usuário</label>
-                <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" />
+                <div class="field">
+                    <label for="username">Usuário</label>
+                    <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" required
+                        autocomplete="username" />
+                </div>
 
-
-
-                <label for="password">Senha</label>
-                <input id="password" v-model="password" type="password" placeholder="Digite sua senha" />
-
-
-                <button type="submit">
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <input id="password" v-model="password" type="password" placeholder="Digite sua senha" required
+                        autocomplete="current-password" />
+                </div>
+                <button class="login-button" type="submit">
                     Entrar
                 </button>
-
             </form>
-            <div class="cadastrar">
-                <p>ou</p>
-                <RouterLink to="/registro">
-                    <p>cadastre-se</p>
-                </RouterLink>
+
+            <div class="divider">
+                <span>ou</span>
             </div>
 
-        </div>
-
-
-
-    </div>
-
-
-
+            <div class="login-footer">
+                <RouterLink to="/registro">cadastre-se</RouterLink>
+            </div>
+        </section>
+    </main>
 </template>
+
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
@@ -71,61 +70,50 @@ const fazerLogin = async () => {
 
 </script>
 <style scoped>
-.background-container {
-    height: 100%;
+.login-page {
+    min-height: 100vh;
     background-image: url("../assets/back-login.jpg");
     background-size: cover;
-    /* Garante que a área seja coberta */
-    background-position: center center;
-    /* Centraliza a imagem no viewport */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    /* (Opcional) Fixa a imagem na tela ao rolar (se houver outro conteúdo rolável) */
-
-    /* 2. Propriedades de Tela Cheia e Bloqueio de Scroll */
-    position: fixed;
-    /* Fixa o container na posição de viewport */
-    top: 0;
-    /* Define o topo */
-    left: 0;
-    /* Define a esquerda */
-    width: 100vw;
-    /* Ocupa 100% da Largura do Viewport */
-    height: 100vh;
-    /* Ocupa 100% da Altura do Viewport */
-    z-index: -1000;
-    /* Coloca a imagem atrás de todo o conteúdo */
-
-    /* 3. Bloqueio de Scroll do Elemento (essencial para eliminar vazamento) */
-    overflow: hidden;
-
-    /* 4. Alinhamento de components filhos */
+    background-position: center;
     display: flex;
     align-items: center;
-    flex-direction: column;
-
+    justify-content: center;
 }
 
-.form-group {
+.login-card {
     background: rgba(30, 30, 30, 0.85);
     width: 100%;
     max-width: 380px;
-    border-radius: 12px;
     padding: 2.5rem 2rem;
+    border-radius: 12px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    text-align: center;
 }
 
-/* Form */
-.form-group form {
+.login-title {
+    color: #19db50;
+    margin-bottom: 1.5rem;
+}
+
+.login-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1rem;
 }
 
-input {
-    width: 100%;
-    box-sizing: border-box;
+.field {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.field label {
+    color: #19db50;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.field input {
     height: 42px;
     border-radius: 6px;
     border: 1px solid #333;
@@ -134,58 +122,56 @@ input {
     padding: 0 10px;
 }
 
-button {
-    width: 80%;
-    height: 40px;
-    margin-top: 20px;
-    background-color: #000000;
+.login-button {
+    margin-top: 1rem;
+    height: 42px;
     border-radius: 10px;
-    border: 1px solid white;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
     cursor: pointer;
-    transition: all 0.6s;
-    color: rgb(255, 255, 255);
-
+    transition: 0.3s;
 }
 
-button:hover {
+.login-button:hover {
     background-color: #19db50;
-    transform: scale(1.1);
-
+    transform: scale(1.05);
 }
 
-label {
-    padding: 5px;
-    color: #19db50;
-    border-radius: 3px;
-    font-weight: bold;
-    margin-bottom: 10px;
+.login-footer {
+    margin-top: 1.5rem;
 }
 
-.cadastrar p {
-    margin-bottom: 20px;
-}
-
-.cadastrar a {
-    margin-top: 200px;
+.login-footer a {
     color: #19db50;
     text-decoration: none;
+    font-weight: bold;
 }
 
-h1 {
-    margin-top: 100px;
-    margin-bottom: 10px;
-    color: #19db50;
-    background: rgb(30, 30, 30);
-    border-radius: 5px;
-    padding: 10px;
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: #aaa;
+  font-size: 0.9rem;
+}
 
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #444;
+}
 
+.divider span {
+  padding: 0 10px;
+  color: #19db50;
+  font-weight: bold;
 }
 
 .erro {
     color: red;
     font-size: 0.9rem;
-    margin-top: -15px;
-    margin-bottom: 10px;
 }
 </style>

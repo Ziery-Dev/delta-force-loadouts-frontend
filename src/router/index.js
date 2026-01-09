@@ -9,6 +9,8 @@ import MinhasBuildsView from '@/views/MinhasBuildsView.vue'
 import FavoritosView from '@/views/FavoritosView.vue'
 import RequisicaoLogin from '@/components/RequisicaoLogin.vue'
 import RegistrarUsuarioView from '@/views/RegistrarUsuarioView.vue'
+import ListarUsuariosView from '@/views/ListarUsuariosView.vue'
+
 const routes = [
   {
     path: '/',
@@ -71,6 +73,14 @@ const routes = [
     path: "/registro",
     name: "registro",
     component: RegistrarUsuarioView,
+  },
+
+  {
+    path: "/listar-usuarios",
+    name: "listarUsuarios",
+    component: ListarUsuariosView,
+    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+
   },
 
 

@@ -10,7 +10,7 @@
             <p class="erro">{{ errors.erro }}</p>
 
             <label for="nome">Nome do operador:</label>
-            <input v-model="form.name" id="nome" type="text" maxlength="30" required >
+            <input v-model="form.name" id="nome" type="text" maxlength="30" required>
             <p v-if="errors.name" class="erro">{{ errors.name }}</p>
 
 
@@ -22,7 +22,7 @@
             </select>
             <p v-if="errors.category" class="erro">{{ errors.category }}</p>
 
-        
+
             <button type="submit"> Cadastrar</button>
 
         </form>
@@ -52,7 +52,7 @@ onMounted(() => {
 const errors = ref({});
 
 // dessa forma para poder limpar o formulário
-const initialForm = { name: '', category: null}
+const initialForm = { name: '', category: null }
 const form = ref({ ...initialForm })
 
 
@@ -61,7 +61,7 @@ const categoriaOperador = [
     { label: 'Suporte', value: 'SUPORTE' },
     { label: 'Engenheiro', value: 'ENGENHEIRO' },
     { label: 'Reconhecimento', value: 'RECONHECIMENTO' }
-  
+
 ]
 
 
