@@ -22,7 +22,8 @@
 
 
     <ListagemBuilds :builds="buildStore.builds" />
-    <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg" :anteriorPg="anteriorPg"  />
+    <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+      :anteriorPg="anteriorPg" />
 
 
 
@@ -71,12 +72,15 @@ const form = ref({
   ordem: { sort: 'createdAt', order: 'desc' },
   alcance: ''
 });
+
 //observa mudança no select de ordem para alterar
-watch([
-  () => buildStore.search
-], () => {
-  carregarBuilds(0);
-});
+watch(
+  () => [form.value.ordem, form.value.alcance, buildStore.search],
+  () => {
+    carregarBuilds(0) 
+  }
+)
+
 
 const alcances = [
   { label: 'Curto alcance', value: 'CURTO' },
@@ -87,8 +91,9 @@ const alcances = [
 
 
 
-const carregarBuilds = async (page = 0) => {
-  await buildStore.listarBuilds({
+const carregarBuilds = (page = 0) => {
+  buildStore.currentPage = page
+  buildStore.listarBuilds({
     sort: form.value.ordem.sort,
     order: form.value.ordem.order,
     alcance: form.value.alcance,
@@ -132,6 +137,4 @@ const { currentPage, totalPages } = storeToRefs(buildStore); //Usado para passar
   border-radius: 5px;
 
 }
-
-
 </style>
