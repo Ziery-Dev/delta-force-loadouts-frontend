@@ -1,144 +1,173 @@
 <template>
-    <div class="background-container">
-        <h1>Registre-se</h1>
-        <div class="form-group">
-            <form @submit.prevent="cadastrar">
-                <p class="erro">{{ errors.erro }}</p>
+    <main class="register-page">
+        <section class="register-card">
+            <h1 class="register-title">Crie sua conta</h1>
 
+            <form class="register-form" @submit.prevent="cadastrar">
+                <p v-if="errors.erro" class="erro" role="alert">
+                    {{ errors.erro }}
+                </p>
 
-                <label for="username">Nome de usuário</label>
-                <input type="text" v-model="form.username" id="username" placeholder="Seu nome de usuário" maxlength="30"  required>
-                <p v-if="errors.username" class="erro">{{ errors.username }}</p>
+                <div class="field">
+                    <label for="username">Usuário</label>
+                    <input
+                        id="username"
+                        v-model="form.username"
+                        type="text"
+                        placeholder="Escolha um usuário"
+                        maxlength="30"
+                        required
+                        autocomplete="username"
+                    />
+                    <p v-if="errors.username" class="erro">{{ errors.username }}</p>
+                </div>
 
-                <label for="email">E-mail de recuperação</label>
-                <input type="text" v-model="form.email" id="email" placeholder="Seu e-mail" maxlength="254"  required>
-                <p v-if="errors.email" class="erro">{{ errors.email }}</p>
+                <div class="field">
+                    <label for="email">E-mail</label>
+                    <input
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        placeholder="Seu e-mail"
+                        maxlength="254"
+                        required
+                        autocomplete="email"
+                    />
+                    <p v-if="errors.email" class="erro">{{ errors.email }}</p>
+                </div>
 
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <input
+                        id="password"
+                        v-model="form.password"
+                        type="password"
+                        placeholder="Crie uma senha"
+                        maxlength="72"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <p v-if="errors.password" class="erro">{{ errors.password }}</p>
+                </div>
 
-                <label for="password">Senha</label>
-                <input type="password" v-model="form.password" id="password" placeholder="Criar senha" maxlength="72" required>
-                <p v-if="errors.password" class="erro">{{ errors.password }}</p>
+                <div class="field">
+                    <label for="confirmar">Confirmar senha</label>
+                    <input
+                        id="confirmar"
+                        v-model="form.confirmar"
+                        type="password"
+                        placeholder="Repita a senha"
+                        maxlength="72"
+                        required
+                        autocomplete="new-password"
+                    />
+                </div>
 
-                <label for="confirmar">Confirmar senha</label>
-                <input type="password" v-model="form.confirmar" id="confirmar" placeholder="Repita sua senha" maxlength="72" required>
-                <button type="submit">Cadastrar</button>
+                <button class="register-button" type="submit">
+                    Cadastrar
+                </button>
             </form>
-            <div class="voltar-login">
-                <p>ou</p>
-                <RouterLink to="/login">
-                    <p>voltar ao login</p>
-                </RouterLink>
+
+            <div class="divider">
+                <span>ou</span>
             </div>
 
-        </div>
-
-
-
-    </div>
-
-
+            <div class="register-footer">
+                <RouterLink to="/login">voltar ao login</RouterLink>
+            </div>
+        </section>
+    </main>
 </template>
 
 
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router';
+
 
 const userStore = useUserStore()
+const router = useRouter();
 
 
+const initialForm = {
+    username: '',
+    email: '',
+    password: '',
+    confirmar: ''
+}
 
-
-
-// dessa forma para poder limpar o formulário
-const initialForm = { username: '', email: '', password: '', confirmar: '' }
 const form = ref({ ...initialForm })
-
-const errors = ref({});
-
+const errors = ref({})
 
 const cadastrar = async () => {
+    errors.value = {}
+
+    if (form.value.password !== form.value.confirmar) {
+        errors.value.erro = 'Confirmação de senha não bate com a senha fornecida!'
+        return
+    }
+
     try {
-        if(form.value.password !== form.value.confirmar){   
-            errors.value.erro = "Confirmação de senha não bate com a senha fornecida!"
-            return
-        }
         await userStore.cadastrarUsuario(form.value)
-        alert("sucesso ao cadastrar usuário")
-    }
-    catch (error) {
-        console.log(error.response?.data)
-        if (error.response?.data) {
-            errors.value = error.response.data
-        } else if (error.data) {
-            errors.value = error.data
+        alert('Usuário cadastrado com sucesso!')
+        router.push('/login')
+    } catch (error) {
+        const data = error.response?.data || error.data
+        if (data) {
+            errors.value = data
+        } else {
+            errors.value.erro = 'Erro ao cadastrar usuário.'
         }
     }
-
 }
-
-
-
 </script>
 
-
 <style scoped>
-.background-container {
-    height: 100%;
+.register-page {
+    min-height: 100vh;
     background-image: url("../assets/back-login.jpg");
     background-size: cover;
-    /* Garante que a área seja coberta */
-    background-position: center center;
-    /* Centraliza a imagem no viewport */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    /* (Opcional) Fixa a imagem na tela ao rolar (se houver outro conteúdo rolável) */
-
-    /* 2. Propriedades de Tela Cheia e Bloqueio de Scroll */
-    position: fixed;
-    /* Fixa o container na posição de viewport */
-    top: 0;
-    /* Define o topo */
-    left: 0;
-    /* Define a esquerda */
-    width: 100vw;
-    /* Ocupa 100% da Largura do Viewport */
-    height: 100vh;
-    /* Ocupa 100% da Altura do Viewport */
-    z-index: -1000;
-    /* Coloca a imagem atrás de todo o conteúdo */
-
-    /* 3. Bloqueio de Scroll do Elemento (essencial para eliminar vazamento) */
-    overflow: hidden;
-
-    /* 4. Alinhamento de components filhos */
+    background-position: center;
     display: flex;
     align-items: center;
-    flex-direction: column;
-
+    justify-content: center;
 }
 
-
-.form-group {
+.register-card {
     background: rgba(30, 30, 30, 0.85);
     width: 100%;
     max-width: 380px;
-    border-radius: 12px;
     padding: 2.5rem 2rem;
+    border-radius: 12px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    text-align: center;
 }
 
-/* Form */
-.form-group form {
+.register-title {
+    color: #19db50;
+    margin-bottom: 1.5rem;
+}
+
+.register-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1rem;
 }
 
-input {
-    width: 100%;
-    box-sizing: border-box;
+.field {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.field label {
+    color: #19db50;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.field input {
     height: 42px;
     border-radius: 6px;
     border: 1px solid #333;
@@ -147,55 +176,56 @@ input {
     padding: 0 10px;
 }
 
-button {
-    width: 80%;
-    height: 40px;
-    margin-top: 20px;
-    background-color: #000000;
+.register-button {
+    margin-top: 1rem;
+    height: 42px;
     border-radius: 10px;
-    border: 1px solid white;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
     cursor: pointer;
-    transition: all 0.6s;
-    color: rgb(255, 255, 255);
-
+    transition: 0.3s;
 }
 
-button:hover {
+.register-button:hover {
     background-color: #19db50;
-    transform: scale(1.1);
-
+    transform: scale(1.05);
 }
 
-label {
-    padding: 5px;
-    color: #19db50;
-    border-radius: 3px;
-    font-weight: bold;
-    margin-bottom: 10px;
+.register-footer {
+    margin-top: 1.5rem;
 }
 
-h1 {
-    margin-top: 100px;
-    margin-bottom: 10px;
-    color: #19db50;
-    background: rgb(30, 30, 30);
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.voltar-login p {
-    margin: 20px;
-}
-
-.voltar-login a {
+.register-footer a {
     color: #19db50;
     text-decoration: none;
+    font-weight: bold;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #444;
+}
+
+.divider span {
+    padding: 0 10px;
+    color: #19db50;
+    font-weight: bold;
 }
 
 .erro {
     color: red;
     font-size: 0.9rem;
-    margin-top: -15px;
-    margin-bottom: 10px;
 }
 </style>

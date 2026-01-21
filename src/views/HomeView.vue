@@ -103,9 +103,6 @@ const carregarBuilds = (page = 0) => {
 }
 
 
-
-
-//###########################pode virar so uma função
 const proximaPg = () => {
   carregarBuilds(buildStore.currentPage + 1)
 }
