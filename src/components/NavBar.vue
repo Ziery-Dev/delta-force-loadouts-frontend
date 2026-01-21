@@ -13,13 +13,7 @@
           cadastrar build
         </button>
       </router-link>
-
-
-
-      <div class="search-box">
-        <span class="material-icons">search</span>
-        <input type="search" placeholder="Buscar..." />
-      </div>
+      <Search-input/>
 
 
 
@@ -90,6 +84,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted, onBeforeUnmount } from 'vue';
+import SearchInput from './SearchInput.vue';
 
 const authStore = useAuthStore()
 const router = useRouter()

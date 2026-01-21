@@ -25,6 +25,7 @@
     <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg" :anteriorPg="anteriorPg"  />
 
 
+
     <!-- ################ Pode virar um componente -->
     <!-- <div class="pagination">
 
@@ -57,16 +58,12 @@ import { useBuildStore } from '@/stores/build';
 import { onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
+
 const buildStore = useBuildStore()
 
 //Carrega todas a builds antes de passar via props para listagem de builds
 onMounted(() => {
-  buildStore.listarBuilds({
-    sort: form.value.ordem.sort,
-    order: form.value.ordem.order,
-    alcance: form.value.alcance,
-    page: 0
-  });
+  carregarBuilds(0)
 });
 
 
@@ -76,18 +73,9 @@ const form = ref({
 });
 //observa mudança no select de ordem para alterar
 watch([
-  () => form.value.ordem,
-  () => form.value.alcance
-], ([ordem, alcance]) => {
-
-  buildStore.listarBuilds({
-    sort: ordem.sort,
-    order: ordem.order,
-    alcance,
-    page: 0
-  });
-
-  console.log({ ordem, alcance });
+  () => buildStore.search
+], () => {
+  carregarBuilds(0);
 });
 
 const alcances = [
@@ -98,22 +86,27 @@ const alcances = [
 ]
 
 
-//###########################pode virar so uma função
-const proximaPg = () => {
-  buildStore.listarBuilds({
+
+const carregarBuilds = async (page = 0) => {
+  await buildStore.listarBuilds({
     sort: form.value.ordem.sort,
     order: form.value.ordem.order,
     alcance: form.value.alcance,
-    page: buildStore.currentPage + 1
+    search: buildStore.search,
+    page
   })
 }
+
+
+
+
+//###########################pode virar so uma função
+const proximaPg = () => {
+  carregarBuilds(buildStore.currentPage + 1)
+}
+
 const anteriorPg = () => {
-  buildStore.listarBuilds({
-    sort: form.value.ordem.sort,
-    order: form.value.ordem.order,
-    alcance: form.value.alcance,
-    page: buildStore.currentPage - 1
-  })
+  carregarBuilds(buildStore.currentPage - 1)
 }
 
 

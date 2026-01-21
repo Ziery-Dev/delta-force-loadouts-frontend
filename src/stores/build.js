@@ -7,6 +7,7 @@ export const useBuildStore = defineStore('build', {
         return {
             builds: [],
             minhas_builds: [],
+            search: '',
             currentPage: 0,
             totalPages: 0,
         }
@@ -67,17 +68,17 @@ export const useBuildStore = defineStore('build', {
         async listarMinhasBuilds(page = 0, size = 10, sort = 'createdAt,desc') {
             try {
                 const response = await api.get(`/build/minhas-builds?page=${page}&size=${size}&sort=${sort}`)
-              
+
                 this.minhas_builds = response.data.content
                 this.totalPages = response.data.totalPages;
-                this.currentPage = response.data.number; 
+                this.currentPage = response.data.number;
 
             }
             catch (error) {
                 console.log(error)
                 throw error;
             }
-     
+
         },
 
         async darLike(buildId) {
@@ -120,7 +121,7 @@ export const useBuildStore = defineStore('build', {
         },
 
 
-        async listarBuilds({ sort, order, alcance, page, size = 10 }) {
+        async listarBuilds({ sort, order, alcance, search, page, size = 10 }) {
             try {
                 const response = await api.get('/build', {
                     params: {
@@ -128,7 +129,8 @@ export const useBuildStore = defineStore('build', {
                         size,
                         sort,
                         order,
-                        distanceRange: alcance || null
+                        distanceRange: alcance || null,
+                        search
                     }
                 });
 
@@ -142,9 +144,18 @@ export const useBuildStore = defineStore('build', {
             }
         },
 
-        proximaPag (){
-            this.currentPage += 1
+
+        setSearch(valor){
+            this.search = valor,
+            this.currentPage = 0
+
         }
+
+        
+
+        // proximaPag() {
+        //     this.currentPage += 1
+        // }
 
 
 
