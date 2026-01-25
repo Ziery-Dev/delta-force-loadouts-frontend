@@ -49,8 +49,5 @@ const anteriorPg = () => {
 const { currentPage, totalPages } = storeToRefs(buildStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
 
 
-
-
-
-
 </script>
+

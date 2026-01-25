@@ -92,12 +92,15 @@ const cadastrar = async () => {
 
 <style scoped>
 .cadastro-group {
-    width: 450px;
-    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 
 }
 
 form {
+    width: 70%;
     max-width: 400px;
     padding: 2rem;
     border-radius: 10px;
@@ -161,11 +164,13 @@ button:hover {
 }
 
 h1 {
+
     background-color: #38e76a;
     color: #000000;
     font-family: 'Arial Narrow Bold', sans-serif;
     border-radius: 10px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .selecinar-operador {

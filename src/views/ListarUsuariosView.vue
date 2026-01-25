@@ -1,23 +1,26 @@
 <template>
     <div class="container">
         <h1>Lista de usuários</h1>
-        <ul v-for="user in userStore.usuarios" :key="user.id">
-            <div class="user-group">
-                <li>
-                    {{ user.username }}
-                </li>
-                <li> ID: {{ user.id }}</li>
-                <li> ativo: {{ user.enabled }}</li>
-                
-                <button @click="remover(user.id)">
-                    Remover
-                </button>
-                <button @click="toggleBloquear(user)">
-                    {{ user.enabled  ? "Bloquear" : "Desbloquear"  }}
-                </button>
-            </div>
+        <div class="listagem-group">
+            <ul v-for="user in userStore.usuarios" :key="user.id">
+                <div class="user-group">
+                    <li>
+                        {{ user.username }}
+                    </li>
+                    <li> ID: {{ user.id }}</li>
+                    <li> ativo: {{ user.enabled ? "Sim" : "Não" }}</li>
 
-        </ul>
+                    <button @click="remover(user.id)">
+                        Remover
+                    </button>
+                    <button @click="toggleBloquear(user)">
+                        {{ user.enabled ? "Bloquear" : "Desbloquear" }}
+                    </button>
+                </div>
+
+            </ul>
+
+        </div>
 
 
     </div>
@@ -54,30 +57,30 @@ const remover = async (id) => {
     }
 }
 const toggleBloquear = async (user) => {
- if(user.enabled){
-       try {
-        await userStore.bloquearUsuario(user.id)
-        alert("Usuário bloqueado com sucesso!")
+    if (user.enabled) {
+        try {
+            await userStore.bloquearUsuario(user.id)
+            alert("Usuário bloqueado com sucesso!")
+        }
+        catch (error) {
+            console.log(error)
+            const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+            alert(mensagem)
+            console.log(mensagem)
+        }
     }
-    catch (error) {
-        console.log(error)
-        const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-        alert(mensagem)
-        console.log(mensagem)
+    else {
+        try {
+            await userStore.desbloquearUsuario(user.id)
+            alert("Usuário desbloqueado com sucesso!")
+        }
+        catch (error) {
+            console.log(error)
+            const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+            alert(mensagem)
+            console.log(mensagem)
+        }
     }
- }
- else{
-      try {
-        await userStore.desbloquearUsuario(user.id)
-        alert("Usuário desbloqueado com sucesso!")
-    }
-    catch (error) {
-        console.log(error)
-        const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-        alert(mensagem)
-        console.log(mensagem)
-    }
- }
 }
 
 
@@ -93,17 +96,20 @@ const toggleBloquear = async (user) => {
 
 <style>
 .container {
-    max-width: 800px;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
 
+}
+
+.listagem-group{
+    width: 70%;
+    max-width: 400px;
 }
 
 
 .user-group {
-    width: 300px;
     box-shadow: 0px 0px 2px 0.5px rgb(255, 255, 255);
     border-radius: 2px;
     background-color: rgba(15, 27, 12, 0.438);

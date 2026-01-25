@@ -116,12 +116,18 @@ const cadastrar = async () => {
 
 <style scoped>
 .cadastro-group {
-    width: 450px;
-    margin: 50px auto;
+    border: 1px solid #a11313;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
 
 }
 
 form {
+    border: 1px solid rgb(67, 41, 163);
+    width: 70%;
     max-width: 400px;
     padding: 2rem;
     border-radius: 10px;
@@ -190,14 +196,16 @@ h1 {
     font-family: 'Arial Narrow Bold', sans-serif;
     border-radius: 10px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .selecinar-operador {
+    border: 1px solid green;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     margin-bottom: 20px;
-    width: 300px;
+    width: 80%;
 
 }
 

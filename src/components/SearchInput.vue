@@ -77,4 +77,20 @@ button:hover{
     background-color: #19db50;
     transform: scale(1.1);
 }
+
+/* Responsividade */
+@media (max-width: 768px) {
+
+  .search-box input {
+   width: 200px;
+  }
+  .search-box .material-icons {
+     position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    pointer-events: none;
+  }
+}
 </style>

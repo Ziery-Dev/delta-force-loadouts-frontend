@@ -141,41 +141,14 @@ onBeforeUnmount(() => {
 
 nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 25px;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /* 🔍 Caixa de busca */
-.search-box {
-  position: relative;
-}
 
-.search-box .material-icons {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  color: #aaa;
-  pointer-events: none;
-}
-
-.search-box input {
-  width: 300px;
-  padding: 10px 10px 10px 38px;
-  border-radius: 20px;
-  border: 1px solid #2a4a2a;
-  background-color: #1b1b1b;
-  /* fundo escuro do input */
-  color: #d8ffd8;
-  /* texto claro */
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.search-box input:focus {
-  border-color: #19db50;
-  /* verde claro no foco */
-}
 
 /* 🏠 Botão Home */
 .home-button {
@@ -288,4 +261,13 @@ a {
 router-link {
   text-decoration: none;
 }
+
+
+/* Ajuste de resposividade */
+@media (max-width: 614px) {
+ 
+}
+
+
+
 </style>
