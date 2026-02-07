@@ -24,10 +24,10 @@
       </div>
       <div class="like-group">
         <button @click="avaliarBuild(b.id, 1)" :class="{ ativo: b.likedByUser }">
-          <span  class="material-icons" >thumb_up</span>
+          <span class="material-icons">thumb_up</span>
         </button>
         <button @click="avaliarBuild(b.id, -1)" :class="{ ativo: b.dislikedByUser }">
-          <span  class="material-icons like-deslike">thumb_down</span>
+          <span class="material-icons like-deslike">thumb_down</span>
         </button>
       </div>
 
@@ -48,6 +48,8 @@ import { useArmaStore } from '@/stores/arma';
 import CadastrarBuildView from '@/views/CadastrarBuildView.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useFavoritosStore } from '@/stores/favoritos';
+import router from '@/router'
+
 
 
 const props = defineProps({
@@ -76,7 +78,7 @@ onMounted(async () => {
   if (authStore.isAuthenticated) { //Impede que o edpoint seja chamado caso o usuário não esteja logado
     await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
   }
- 
+
 })
 
 
@@ -162,8 +164,11 @@ const toggleFavorito = async (buildId) => {
 
 //Simplemente função que diz se o usuário avaliou a build com like
 const avaliarBuild = async (buildId, valor) => {
+  if(!authStore.isAuthenticated){
+    router.push("/requisicao-login")
+    return
+  }
   let acao
-
   if (valor === 1) {
     acao = buildStore.darLike
   } else if (valor === -1) {

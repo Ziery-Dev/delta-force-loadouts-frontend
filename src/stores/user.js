@@ -16,6 +16,7 @@ export const useUserStore = defineStore('user', {
                 this.usuarios = response.data
             }
             catch (error) { //ver isso aqui depois...
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error;
             }

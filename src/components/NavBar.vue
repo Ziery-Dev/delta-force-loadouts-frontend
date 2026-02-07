@@ -263,10 +263,6 @@ router-link {
 }
 
 
-/* Ajuste de resposividade */
-@media (max-width: 614px) {
- 
-}
 
 
 

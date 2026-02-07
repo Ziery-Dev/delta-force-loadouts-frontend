@@ -14,17 +14,6 @@ export const useBuildStore = defineStore('build', {
     },
 
     actions: {
-        // async listarTodasBuilds() {
-        //     try {
-        //         const response = await api.get('/build')
-        //         this.builds = response.data
-        //     }
-        //     catch (error) { //ver isso aqui depois...
-        //         console.log(error)
-        //         throw error;
-        //     }
-
-        // },
 
         async cadastrarBuild(build) {
             try {
@@ -33,6 +22,7 @@ export const useBuildStore = defineStore('build', {
                 return response.data
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error
             }
@@ -44,6 +34,7 @@ export const useBuildStore = defineStore('build', {
                 this.builds = this.builds.filter(build => build.id !== id)
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error
             }
@@ -59,6 +50,7 @@ export const useBuildStore = defineStore('build', {
                 return response.data
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error
             }
@@ -75,6 +67,7 @@ export const useBuildStore = defineStore('build', {
 
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error;
             }
@@ -139,19 +132,20 @@ export const useBuildStore = defineStore('build', {
                 this.currentPage = response.data.number;
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error);
                 throw error;
             }
         },
 
 
-        setSearch(valor){
+        setSearch(valor) {
             this.search = valor,
-            this.currentPage = 0
+                this.currentPage = 0
 
         }
 
-        
+
 
         // proximaPag() {
         //     this.currentPage += 1

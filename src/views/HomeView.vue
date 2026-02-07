@@ -27,27 +27,7 @@
 
 
 
-    <!-- ################ Pode virar um componente -->
-    <!-- <div class="pagination">
-
-      <button class="arrow-button" @click="anteriorPg()" :disabled="buildStore.currentPage === 0">
-        <span class="material-icons">arrow_circle_left</span>
-      </button>
-
-      <span>Página {{ buildStore.currentPage + 1 }} de {{ buildStore.totalPages }}</span>
-
-      <button class="arrow-button" @click="proximaPg()"
-        :disabled="buildStore.currentPage + 1 === buildStore.totalPages">
-        <span class="material-icons">arrow_circle_right</span>
-
-      </button>
-
-    </div> -->
-
-
   </div>
-
-
 
 
 </template>

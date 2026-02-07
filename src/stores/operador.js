@@ -16,6 +16,7 @@ export const useOperadorStore = defineStore('operador', {
                 this.operadores = response.data
             }
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error;
             }
@@ -28,6 +29,7 @@ export const useOperadorStore = defineStore('operador', {
             }
 
             catch (error) {
+                if (error?.response?.status === 401) return
                 console.log(error)
                 throw error;
             }

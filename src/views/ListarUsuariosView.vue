@@ -33,8 +33,11 @@
 <script setup>
 import { useUserStore } from '@/stores/user';
 import { onMounted } from 'vue';
+import router from '@/router'
+import { useAuthStore } from '@/stores/auth';
 
 
+const authStore = useAuthStore()
 const userStore = useUserStore()
 
 
@@ -45,6 +48,10 @@ onMounted(() => {
 
 
 const remover = async (id) => {
+    if (!authStore.isAuthenticated) {
+        router.push("/requisicao-login")
+        return
+    }
     try {
         await userStore.removerUsuario(id)
         alert("Usuário removido com sucesso!")
@@ -57,16 +64,18 @@ const remover = async (id) => {
     }
 }
 const toggleBloquear = async (user) => {
+    if (!authStore.isAuthenticated) {
+        router.push("/requisicao-login")
+        return
+    }
     if (user.enabled) {
         try {
             await userStore.bloquearUsuario(user.id)
             alert("Usuário bloqueado com sucesso!")
         }
         catch (error) {
-            console.log(error)
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
             alert(mensagem)
-            console.log(mensagem)
         }
     }
     else {
@@ -75,10 +84,8 @@ const toggleBloquear = async (user) => {
             alert("Usuário desbloqueado com sucesso!")
         }
         catch (error) {
-            console.log(error)
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
             alert(mensagem)
-            console.log(mensagem)
         }
     }
 }
@@ -103,7 +110,7 @@ const toggleBloquear = async (user) => {
 
 }
 
-.listagem-group{
+.listagem-group {
     width: 70%;
     max-width: 400px;
 }

@@ -10,7 +10,7 @@ app.use(pinia)
 
 const authStore = useAuthStore()
 
-// 🔹 Garante que o axios receba o token antes de tudo
+// Garante que o axios receba o token antes de tudo
 authStore.tryAutoLogin()
 
 app.use(router)
