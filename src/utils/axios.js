@@ -2,6 +2,7 @@
 import axios from 'axios';
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
+import { notify } from './notify';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080',
@@ -19,6 +20,7 @@ api.interceptors.response.use(
     if (status === 401 && authStore.isAuthenticated) {
       authStore.logout()
       router.push("/requisicao-login")
+      notify("Sessão expirada", "warning");
     }
 
     return Promise.reject(error) // <- SEMPRE rejeita no erro

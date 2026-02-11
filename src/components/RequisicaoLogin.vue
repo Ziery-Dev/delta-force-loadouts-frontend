@@ -29,7 +29,7 @@ const fazerLogin = () =>  {
     router.push("/login")
 }
 const voltarPagina = () =>  {
-    router.back()
+    router.push("/")
 }
 
 
@@ -55,7 +55,7 @@ button {
     display: flex;
     align-items: center;
     padding-left: 10px;
-    width: 10%;
+    width: 150px;
     height: 30px;
     margin: 5px;
     border-radius: 8px;

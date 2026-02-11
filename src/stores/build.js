@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
+import { notify } from "@/utils/notify";
 
 export const useBuildStore = defineStore('build', {
 
@@ -22,7 +23,11 @@ export const useBuildStore = defineStore('build', {
                 return response.data
             }
             catch (error) {
-                if (error?.response?.status === 401) return
+                if (error?.response?.status === 401) return null
+                if(error?.response?.status === 429){
+                    notify("Muitas tentativas de cadastro, tente novamente mais tarde!", "warning")
+                    return null
+                }
                 console.log(error)
                 throw error
             }

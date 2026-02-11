@@ -49,6 +49,7 @@ import CadastrarBuildView from '@/views/CadastrarBuildView.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useFavoritosStore } from '@/stores/favoritos';
 import router from '@/router'
+import { notify } from '@/utils/notify';
 
 
 
@@ -109,11 +110,11 @@ function copiarCodigo(code) {
 const removerBuild = async (id) => {
   try {
     await buildStore.removerBuild(id)
-    alert("Removido com sucesso!")
+    notify("Removido com sucesso!", "success" )
   }
   catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-    alert(mensagem)
+    notify(mensagem, "error")
   }
 }
 
@@ -147,17 +148,17 @@ const toggleFavorito = async (buildId) => {
 
     if (!favoritosStore.favoritos.some(f => f.id === buildId)) { //verifica se a build atual ainda não pertence a favoritos
       await favoritosStore.adicionarFavorito(buildId)
-      alert('adicionado a favoritos com sucesso!')
+      notify('adicionado a favoritos!', "success")
     }
     else {
       await favoritosStore.removerFavorito(buildId)
-      alert("removido de favoritos")
+      notify("removido de favoritos", "success")
 
     }
   }
   catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-    alert(mensagem)
+    notify(mensagem, "error")
   }
 
 }
@@ -174,16 +175,16 @@ const avaliarBuild = async (buildId, valor) => {
   } else if (valor === -1) {
     acao = buildStore.disLike
   } else {
-    alert("Erro inesperado")
+    notify("Erro inesperado", "error")
     return
   }
 
   try {
     await acao(buildId)
-    alert("voto computado")
+    notify("voto computado!", "success")
   } catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-    alert(mensagem)
+    notify(mensagem, "error")
   }
 }
 

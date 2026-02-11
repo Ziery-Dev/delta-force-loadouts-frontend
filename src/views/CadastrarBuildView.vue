@@ -16,7 +16,7 @@
 
 
             <label for="descricao">Descriação da build:</label>
-            <input v-model="form.description" id="descricao" type="text" maxlength="200" >
+            <input v-model="form.description" id="descricao" type="text" maxlength="200">
             <p v-if="errors.description" class="erro">{{ errors.description }}</p>
 
 
@@ -51,6 +51,7 @@ import router from '@/router';
 import { useBuildStore } from '@/stores/build';
 import { ref, onMounted, defineProps, defineEmits } from 'vue';
 import { useArmaStore } from '@/stores/arma';
+import { notify } from '@/utils/notify';
 
 
 //props que recebe a info de edição e a build sendo editada
@@ -101,10 +102,10 @@ const alcances = [
 const cadastrar = async () => {
     if (!props.editando) {
         try {
-            await buildStore.cadastrarBuild(form.value)
+            const created = await buildStore.cadastrarBuild(form.value)
+            if (!created) return // não navega, não mostra sucesso
             router.push('/')
-            alert('Sucesso ao cadastrar build!')
-
+            notify("Build cadastrada!", "success");
         }
         catch (error) {
             if (error.response?.data) {
@@ -119,7 +120,6 @@ const cadastrar = async () => {
         try {
             await buildStore.editarBuild(form.value, props.build.id)
             emit('fechar-edicao')
-
         }
         catch (error) {
             if (error.response?.data) {
