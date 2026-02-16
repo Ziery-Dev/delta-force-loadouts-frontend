@@ -7,13 +7,13 @@
         </button>
       </router-link>
 
-      <router-link to="/cadastrar-build">
+      <router-link to="/cadastrar-build" class="cadastrar-build">
         <button class="cadastro-button">
           <span class="material-icons">assignment_add</span>
-          cadastrar build
+          nova build
         </button>
       </router-link>
-      <Search-input/>
+      <Search-input class="buscaInput" />
 
 
       <div class="user-menu" ref="menuRef">
@@ -47,10 +47,10 @@
           </router-link>
 
           <router-link to="/listar-usuarios">
-            <button  v-if="authStore.user?.role === 'ADMIN'"  class="dropdown-item">
+            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
               <span class="material-icons">groups</span>
-              Listar usuários     
-            </button> 
+              Listar usuários
+            </button>
           </router-link>
 
           <router-link to="/favoritos">
@@ -258,5 +258,20 @@ router-link {
   text-decoration: none;
 }
 
+/*Responsividade */
+@media (max-width: 625px) {
 
+  /*Input de busca */
+  .buscaInput {
+    order: 99;
+  }
+}
+
+
+/*Botão de cadastrar build */
+@media (max-width: 344px) {
+  .cadastrar-build{
+        order: 98;
+  }
+}
 </style>
