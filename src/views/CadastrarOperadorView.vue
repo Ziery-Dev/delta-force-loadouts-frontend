@@ -38,6 +38,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useOperadorStore } from '@/stores/operador';
+import { notify } from '@/utils/notify';
 
 
 
@@ -70,7 +71,7 @@ const cadastrar = async () => {
 
     try {
         await operadorStore.cadastrarOperador(form.value)
-        alert("Sucesso ao cadastrar operador")
+        notify("Sucesso ao cadastrar operador!","success")
         Object.assign(form.value, initialForm) //Limpa o formulário após cadastro
         errors.value = {}
 
@@ -85,8 +86,6 @@ const cadastrar = async () => {
     }
 
 }
-
-
 
 </script>
 

@@ -28,20 +28,6 @@ api.interceptors.response.use(
 )
 
 
-// api.interceptors.response.use(
-//   response => response,
-//   error => {
-//     const status = error.response?.status
-//     const authStore = useAuthStore()
-//     if ((status === 401 || status === 403) && authStore.isAuthenticated) {
-
-//       authStore.logout() // limpa user + token
-//       router.push('/')   // ou '/login'
-//     }
-
-//     return Promise.reject(error)
-//   }
-// )
 
 
 export default api;

@@ -35,6 +35,7 @@ import { useUserStore } from '@/stores/user';
 import { onMounted } from 'vue';
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth';
+import { notify } from '@/utils/notify';
 
 
 const authStore = useAuthStore()
@@ -54,13 +55,11 @@ const remover = async (id) => {
     }
     try {
         await userStore.removerUsuario(id)
-        alert("Usuário removido com sucesso!")
+        notify("Usuário removido!","warning")
     }
     catch (error) {
-        console.log(error)
         const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-        alert(mensagem)
-        console.log(mensagem)
+        notify(mensagem, "error")
     }
 }
 const toggleBloquear = async (user) => {
@@ -71,36 +70,26 @@ const toggleBloquear = async (user) => {
     if (user.enabled) {
         try {
             await userStore.bloquearUsuario(user.id)
-            alert("Usuário bloqueado com sucesso!")
+            notify("Usuário bloqueado!", "warning")
         }
         catch (error) {
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-            alert(mensagem)
+            notify(mensagem, "error") 
         }
     }
     else {
         try {
             await userStore.desbloquearUsuario(user.id)
-            alert("Usuário desbloqueado com sucesso!")
+            notify("Usuário desbloqueado!", "success")
         }
         catch (error) {
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-            alert(mensagem)
+            notify(mensagem, "error")
         }
     }
 }
 
-
-
-
-
-
-
 </script>
-
-
-
-
 <style>
 .container {
     display: flex;

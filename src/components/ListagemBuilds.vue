@@ -110,7 +110,7 @@ function copiarCodigo(code) {
 const removerBuild = async (id) => {
   try {
     await buildStore.removerBuild(id)
-    notify("Removido com sucesso!", "success" )
+    notify("Removido com sucesso!", "success")
   }
   catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
@@ -165,23 +165,40 @@ const toggleFavorito = async (buildId) => {
 
 //Simplemente função que diz se o usuário avaliou a build com like
 const avaliarBuild = async (buildId, valor) => {
-  if(!authStore.isAuthenticated){
+  if (!authStore.isAuthenticated) {
     router.push("/requisicao-login")
     return
   }
+
+  const buildAntes = buildStore.builds.find(b => b.id === buildId)
+
   let acao
+  let campoAntes // "likedByUser" ou "dislikedByUser"
+
   if (valor === 1) {
     acao = buildStore.darLike
+    campoAntes = "likedByUser"
   } else if (valor === -1) {
     acao = buildStore.disLike
+    campoAntes = "dislikedByUser"
   } else {
     notify("Erro inesperado", "error")
     return
   }
 
+  const jaTinhaVotado = buildAntes && buildAntes[campoAntes] === true
   try {
-    await acao(buildId)
-    notify("voto computado!", "success")
+    const updated = await acao(buildId)
+
+    // Se antes era true e agora virou false => removeu o voto
+    // Se antes era false e agora virou true => computou o voto
+    const agoraTemVoto = updated && updated[campoAntes] === true
+
+    if (jaTinhaVotado && !agoraTemVoto) {
+      notify("Voto removido!", "success")
+    } else {
+      notify("Voto computado!", "success")
+    }
   } catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
     notify(mensagem, "error")
@@ -203,7 +220,7 @@ const buildFavoritada = (id) => {
   gap: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .caixa-loadout {
@@ -219,7 +236,7 @@ const buildFavoritada = (id) => {
   border-radius: 20px;
   transition: 0.4s;
   box-shadow: 0px 0px 1px 1px rgb(34, 172, 0);
-  padding: 10px;
+  padding: 5px;
 }
 
 .caixa-loadout:hover {
@@ -346,6 +363,7 @@ const buildFavoritada = (id) => {
   transform: translate(-50%, -50%);
   border-radius: 8px;
 }
+
 
 
 /*estilo favoritado, quando a build ja foi adicionada a favorto*/

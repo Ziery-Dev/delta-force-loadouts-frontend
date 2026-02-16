@@ -16,7 +16,6 @@
       <Search-input/>
 
 
-
       <div class="user-menu" ref="menuRef">
         <div class="user-info" @click="toggleMenu">
           <span class="material-icons">account_circle</span>
@@ -96,8 +95,6 @@ const route = useRoute()
 const ocultarNavbar = ['/login', '/registro']
 
 
-
-
 //abre e fecha menu de perfil do usuario 
 const toggleMenu = () => {
   menuAberto.value = !menuAberto.value
@@ -128,7 +125,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 🔹 Barra de navegação */
+/*  Barra de navegação */
 .nav-group {
   background-color: #0f2910;
   display: flex;
@@ -147,10 +144,9 @@ nav {
   gap: 1rem;
 }
 
-/* 🔍 Caixa de busca */
 
 
-/* 🏠 Botão Home */
+/* Botão Home */
 .home-button {
   border: none;
   background: transparent;
@@ -159,7 +155,7 @@ nav {
   font-size: 24px;
 }
 
-/* 🚪 Botão Sair */
+/* Botão Sair */
 .logout-btn {
   display: flex;
   align-items: center;
@@ -261,9 +257,6 @@ a {
 router-link {
   text-decoration: none;
 }
-
-
-
 
 
 </style>

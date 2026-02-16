@@ -7,7 +7,7 @@
 
             <p class="erro">{{ errors.erro }}</p>
 
-            <label for="arma">Selecione a arma</label>
+            <label for="arma">Selecione a arma:</label>
             <select v-model="form.weaponId" name="arma" id="arma" required>
                 <option value=null disabled>Selecione...</option>
                 <option v-for="arma in armaStore.armas" :key="arma.id" :value="arma.id">{{ arma.name }}</option>
@@ -88,7 +88,6 @@ onMounted(() => {
 })
 
 
-
 //Exibe os alcances de forma mais amigavel
 const alcances = [
     { label: 'Curto alcance', value: 'CURTO' },
@@ -134,7 +133,6 @@ const cadastrar = async () => {
 
 }
 
-
 </script>
 
 <style scoped>
@@ -161,6 +159,7 @@ form {
 }
 
 label {
+    width: 50%;
     padding: 5px;
     background-color: black;
     color: #19db50;
@@ -183,7 +182,7 @@ select {
 input {
     background-color: #19db50;
     width: 78%;
-    height: 32px;
+    height: 20px;
     border-radius: 5px;
     border: none;
     margin: 10px 0px 20px 0px;
@@ -217,6 +216,7 @@ h1 {
     border-radius: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
+    padding: 0 10px;
 }
 
 .erro {
@@ -245,10 +245,22 @@ h1 {
     align-items: center;
     flex-direction: column;
     background: #0f291098;
+    margin: 0 auto;
 
     color: #19db50;
     box-shadow: 0px 0px 1px 0.5px white;
 
+}
+
+.edicao-group label{
+    width: 80%;
+}
+
+.edicao-group h1{
+    width: 80%;
+    margin: 10px auto;
+
+  
 }
 
 .edicao-group .cancelarEdicao {

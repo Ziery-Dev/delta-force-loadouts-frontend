@@ -84,6 +84,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router';
+import { notify } from '@/utils/notify';
 
 
 const userStore = useUserStore()
@@ -110,7 +111,7 @@ const cadastrar = async () => {
 
     try {
         await userStore.cadastrarUsuario(form.value)
-        alert('Usuário cadastrado com sucesso!')
+        notify("Usuário cadastrado com sucesso!", "success")
         router.push('/login')
     } catch (error) {
         const data = error.response?.data || error.data

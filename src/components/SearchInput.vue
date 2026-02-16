@@ -23,13 +23,10 @@ const buscar =  async () => {
     buildStore.setSearch(search.value)
 }
 
-
-
-
 </script>
 
 <style scoped>
-/* 🔍 Caixa de busca */
+/*  Caixa de busca */
 .search-box {
     position: relative;
 }
@@ -49,16 +46,13 @@ const buscar =  async () => {
     border-radius: 20px;
     border: 1px solid #2a4a2a;
     background-color: #1b1b1b;
-    /* fundo escuro do input */
     color: #d8ffd8;
-    /* texto claro */
     outline: none;
     transition: border-color 0.2s;
 }
 
 .search-box input:focus {
     border-color: #19db50;
-    /* verde claro no foco */
 }
 
 button{

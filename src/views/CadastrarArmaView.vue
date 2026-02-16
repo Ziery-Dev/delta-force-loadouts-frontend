@@ -1,6 +1,4 @@
 <template>
-
-
     <div class="cadastro-group">
 
         <h1>Cadastre uma nova arma</h1>
@@ -32,35 +30,26 @@
             <p v-if="errors.operatorIds" class="erro">{{ errors.operatorIds }}</p>
 
 
-
-
             <label for="imagem">Insira a url da imagem </label>
             <input v-model="form.imgUrl" id="imagem" type="text" maxlength="200" required>
             <p v-if="errors.imgUrl" class="erro">{{ errors.imgUrl }}</p>
 
-
             <button type="submit"> Cadastrar</button>
 
         </form>
-
-
     </div>
 
 </template>
-
-
 
 
 <script setup>
 import { useArmaStore } from '@/stores/arma';
 import { ref, onMounted } from 'vue';
 import { useOperadorStore } from '@/stores/operador';
-
-
+import { notify } from '@/utils/notify';
 
 const armaStore = useArmaStore()
 const operadorStore = useOperadorStore()
-
 
 onMounted(() => {
     operadorStore.listarOperadores()
@@ -82,10 +71,6 @@ const categoriaArma = [
     { label: 'SR', value: 'SR' }
 ]
 
-
-
-
-
 const cadastrar = async () => {
 
     if (form.value.operatorIds.length === 0) {
@@ -94,7 +79,7 @@ const cadastrar = async () => {
     }
     try {
         await armaStore.cadastrarArma(form.value)
-        alert("Sucesso ao cadastrar arma")
+        notify("Sucesso ao cadastrar arma!", "success")
         Object.assign(form.value, initialForm) //Limpa o formulário após cadastro
         errors.value = {}
 
@@ -110,13 +95,10 @@ const cadastrar = async () => {
 
 }
 
-
-
 </script>
 
 <style scoped>
 .cadastro-group {
-    border: 1px solid #a11313;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -126,7 +108,6 @@ const cadastrar = async () => {
 }
 
 form {
-    border: 1px solid rgb(67, 41, 163);
     width: 70%;
     max-width: 400px;
     padding: 2rem;

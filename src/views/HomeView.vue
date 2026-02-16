@@ -20,12 +20,9 @@
       </select>
     </div>
 
-
     <ListagemBuilds :builds="buildStore.builds" />
     <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
       :anteriorPg="anteriorPg" />
-
-
 
   </div>
 
