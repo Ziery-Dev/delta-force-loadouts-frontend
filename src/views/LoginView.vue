@@ -12,13 +12,23 @@
                     <label for="username">Usuário</label>
                     <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" required
                         autocomplete="username" />
+
                 </div>
+
 
                 <div class="field">
                     <label for="password">Senha</label>
-                    <input id="password" v-model="password" type="password" placeholder="Digite sua senha" required
-                        autocomplete="current-password" />
+                    <div class="field-senha">
+                        <input id="password" v-model="password" :type="exibirSenha ? 'text' : 'password'"
+                            placeholder="Digite sua senha" required autocomplete="current-password" />
+                        <button @click="togleSenha" type="button" class="togleSenha-botao">
+                            <span class="material-icons">{{ exibirSenha ? 'visibility' : 'visibility_off' }}</span>
+                        </button>
+                    </div>
+
                 </div>
+
+
                 <button class="login-button" type="submit">
                     Entrar
                 </button>
@@ -46,6 +56,8 @@ const authStore = useAuthStore();
 const username = ref("");
 const password = ref("");
 
+const exibirSenha = ref(false)
+
 
 const errors = ref({})
 
@@ -67,6 +79,10 @@ const fazerLogin = async () => {
     }
 }
 
+//função que exibe a senha mudando o valor para true que muda o tipo do campo da senha de password para text
+function togleSenha() {
+    exibirSenha.value = !exibirSenha.value
+}
 
 </script>
 <style scoped>
@@ -115,11 +131,15 @@ const fazerLogin = async () => {
 
 .field input {
     height: 42px;
+    width: 100%;
+    box-sizing: border-box;
     border-radius: 6px;
     border: 1px solid #333;
     background-color: #000;
+    caret-color: #19db50; 
     color: #fff;
     padding: 0 10px;
+
 }
 
 .login-button {
@@ -149,29 +169,68 @@ const fazerLogin = async () => {
 }
 
 .divider {
-  display: flex;
-  align-items: center;
-  margin: 1.5rem 0;
-  color: #aaa;
-  font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #aaa;
+    font-size: 0.9rem;
 }
 
 .divider::before,
 .divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: #444;
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #444;
 }
 
 .divider span {
-  padding: 0 10px;
-  color: #19db50;
-  font-weight: bold;
+    padding: 0 10px;
+    color: #19db50;
+    font-weight: bold;
 }
 
 .erro {
     color: red;
     font-size: 0.9rem;
 }
+
+
+/*Exibição de senha */
+
+
+.field-senha{
+    position: relative;
+}
+
+.togleSenha-botao{
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    border: none;
+    background-color: #00000000;
+    right: 10px;
+
+}
+
+.material-icons{
+    background: transparent;
+    color: white;
+}
+
+.field-senha input {
+    padding-right: 40px;
+}
+
+
+
+/*Correção do fundo claro no preenchimento automatico */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #000 inset;
+  -webkit-text-fill-color: #fff;
+}
+
 </style>
