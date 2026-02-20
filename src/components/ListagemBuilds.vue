@@ -8,7 +8,7 @@
         <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
         <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
         <p><span class="nomeCampo">Código: </span> {{ b.code }}</p>
-        <p><span class="nomeCampo">Criação: </span> {{ b.createdAt }}</p>
+        <p><span class="nomeCampo">Criação: </span> {{ formatarData(b.createdAt) }}</p>
       </div>
 
       <div class="button-group">
@@ -50,6 +50,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useFavoritosStore } from '@/stores/favoritos';
 import router from '@/router'
 import { notify } from '@/utils/notify';
+import { format } from 'date-fns';
 
 
 
@@ -210,6 +211,15 @@ const avaliarBuild = async (buildId, valor) => {
 const buildFavoritada = (id) => {
   return favoritosStore.favoritos.some(f => f.id === id)
 }
+
+
+//Formata a data para padrão Br
+const formatarData = (data) =>{
+  if(data == null) return ''
+   return format(new Date(data), 'dd/MM/yyyy')
+  
+}
+
 
 </script>
 
