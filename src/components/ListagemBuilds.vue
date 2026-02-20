@@ -6,7 +6,7 @@
         <p><span class="nomeCampo">Criada por: </span> {{ b.creatorUsername }} </p>
         <p><span class="nomeCampo">Arma: </span> {{ getWeaponName(b.weaponId) }} </p>
         <p><span class="nomeCampo">Descrição: </span> {{ b.description }}</p>
-        <p><span class="nomeCampo"> Alcance: </span> {{ b.distance_range }}</p>
+        <p><span class="nomeCampo"> Alcance: </span> {{ alcances[b.distance_range] ?? b.distance_range }}</p>
         <p><span class="nomeCampo">Código: </span> {{ b.code }}</p>
         <p><span class="nomeCampo">Criação: </span> {{ formatarData(b.createdAt) }}</p>
       </div>
@@ -221,6 +221,17 @@ const formatarData = (data) =>{
 }
 
 
+//Constante que permite exibir nomes mais amigaveis para distancia da arma
+  const alcances = {
+    CURTO : "Curto",
+    MEDIO : "Médio",
+    LONGE :  "Longo",
+    MUITO_LONGE : "Muito longo"
+  }
+
+
+
+
 </script>
 
 <style scoped>
@@ -358,6 +369,8 @@ const formatarData = (data) =>{
   transform: scale(1.1);
   color: #ffffff;
 }
+
+
 
 
 /*Estilo editando*/

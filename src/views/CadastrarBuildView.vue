@@ -182,7 +182,7 @@ select {
 input {
     background-color: #19db50;
     width: 78%;
-    height: 20px;
+    height: 30px;
     border-radius: 5px;
     border: none;
     margin: 10px 0px 20px 0px;
