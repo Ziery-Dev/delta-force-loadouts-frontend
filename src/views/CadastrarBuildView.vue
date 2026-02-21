@@ -35,7 +35,7 @@
 
 
             <button type="submit">{{ editando ? "Editar" : "Cadastrar" }}</button>
-            <button class="cancelarEdicao" v-if="props.editando" @click="['onFechar-edicao']">Cancelar</button>
+            <button class="cancelarEdicao" type="button" v-if="props.editando" @click="emit('fechar-edicao')">Cancelar</button>
 
         </form>
 

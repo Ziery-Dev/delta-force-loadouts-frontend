@@ -13,9 +13,9 @@
 
       <div class="button-group">
         <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
-        <button v-if="podeEditarOuRemover(b)" @click="removerBuild(b.id)"><span
+        <button v-if="podeRemover(b)" @click="removerBuild(b.id)"><span
             class="material-icons">delete</span></button>
-        <button v-if="podeEditarOuRemover(b)" @click="editarBuild(b)"><span
+        <button v-if="podeEditar(b)" @click="editarBuild(b)"><span
             class="material-icons">edit_document</span></button>
         <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }"
           @click="toggleFavorito(b.id)">
@@ -131,15 +131,27 @@ function fecharSeClicouFora() {
   editando.value = false
 }
 
-//decide se o usuário atual é admin ou criador da build, para exibir os botões de excluir e editar
-const podeEditarOuRemover = (build) => {
+//Botão de remover irá aparecer para usuário admin e criador da build
+const podeRemover = (build) => {
   const user = authStore.user
   if (!user) return false
 
   const isAdmin = user.role === 'ADMIN'
   const isCriador = user.id === build.creatorId
 
+
   return isAdmin || isCriador
+}
+
+//Botão de editar irá aparecer somente para criador da build
+const podeEditar = (build) => {
+  const user = authStore.user
+  if (!user) return false
+
+  const isCriador = user.id === build.creatorId
+
+  return isCriador
+
 }
 
 //Quando acionado, adiciona a build a lista de favoritos do usuário
