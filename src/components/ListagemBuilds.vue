@@ -340,7 +340,7 @@ const alcances = {
   box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
 }
-git commit -m "fix(build): corrigir estado visual de botões em dispositivos touch"
+
 
 
 /* Estilo botões like e deslike */
