@@ -13,10 +13,8 @@
 
       <div class="button-group">
         <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
-        <button v-if="podeRemover(b)" @click="removerBuild(b.id)"><span
-            class="material-icons">delete</span></button>
-        <button v-if="podeEditar(b)" @click="editarBuild(b)"><span
-            class="material-icons">edit_document</span></button>
+        <button v-if="podeRemover(b)" @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
+        <button v-if="podeEditar(b)" @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
         <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }"
           @click="toggleFavorito(b.id)">
           <span class="material-icons">favorite</span>
@@ -226,20 +224,20 @@ const buildFavoritada = (id) => {
 
 
 //Formata a data para padrão Br
-const formatarData = (data) =>{
-  if(data == null) return ''
-   return format(new Date(data), 'dd/MM/yyyy')
-  
+const formatarData = (data) => {
+  if (data == null) return ''
+  return format(new Date(data), 'dd/MM/yyyy')
+
 }
 
 
 //Constante que permite exibir nomes mais amigaveis para distancia da arma
-  const alcances = {
-    CURTO : "Curto",
-    MEDIO : "Médio",
-    LONGE :  "Longo",
-    MUITO_LONGE : "Muito longo"
-  }
+const alcances = {
+  CURTO: "Curto",
+  MEDIO: "Médio",
+  LONGE: "Longo",
+  MUITO_LONGE: "Muito longo"
+}
 
 
 
@@ -342,12 +340,7 @@ const formatarData = (data) =>{
   box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
 }
-
-.button-group button:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
-  color: #ffffff;
-}
+git commit -m "fix(build): corrigir estado visual de botões em dispositivos touch"
 
 
 /* Estilo botões like e deslike */
@@ -383,8 +376,6 @@ const formatarData = (data) =>{
 }
 
 
-
-
 /*Estilo editando*/
 .editando-group {
   width: 100%;
@@ -406,5 +397,24 @@ const formatarData = (data) =>{
   color: white;
   box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
 
+}
+
+
+/*Responsvidade */
+@media (hover: hover) and (pointer: fine) {
+
+  .button-group button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
+    color: #ffffff;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .button-group button:active {
+    transform: scale(1.03);
+    box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
+    color: #ffffff;
+  }
 }
 </style>
