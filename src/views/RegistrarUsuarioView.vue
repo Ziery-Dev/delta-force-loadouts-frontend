@@ -85,7 +85,10 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router';
 import { notify } from '@/utils/notify';
-
+import {
+  isRegisterBlocked,
+  setRegisterCooldown,
+} from '@/utils/registerCooldownUltil' 
 
 const userStore = useUserStore()
 const router = useRouter();
@@ -103,6 +106,10 @@ const errors = ref({})
 
 const cadastrar = async () => {
     errors.value = {}
+    if(isRegisterBlocked()){
+        notify("Aguarde um tempo para cadastrar novo usuário", "error")
+        return
+    }
 
     if (form.value.password !== form.value.confirmar) {
         errors.value.erro = 'Confirmação de senha não bate com a senha fornecida!'
@@ -111,6 +118,7 @@ const cadastrar = async () => {
 
     try {
         await userStore.cadastrarUsuario(form.value)
+        setRegisterCooldown()
         notify("Usuário cadastrado com sucesso!", "success")
         router.push('/login')
     } catch (error) {
