@@ -28,7 +28,7 @@ export const useBuildStore = defineStore('build', {
                     notify("Muitas tentativas de cadastro, tente novamente mais tarde!", "warning")
                     return null
                 }
-                console.log(error)
+                notify(error, "error")
                 throw error
             }
         },
@@ -40,7 +40,7 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
+                notify(error, "error")
                 throw error
             }
         },
@@ -56,7 +56,7 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
+                notify(error, "error")
                 throw error
             }
 
@@ -73,7 +73,7 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
+                notify(error, "error")
                 throw error;
             }
 
@@ -94,7 +94,7 @@ export const useBuildStore = defineStore('build', {
                 return updated
             }
             catch (error) {
-                console.log(error)
+                notify(error, "error")
                 throw error;
             }
         },
@@ -113,7 +113,7 @@ export const useBuildStore = defineStore('build', {
                 return updated
             }
             catch (error) {
-                console.log(error)
+                notify(error, "error")
                 throw error;
             }
         },
@@ -138,7 +138,7 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error);
+                notify(error, "error")
                 throw error;
             }
         },

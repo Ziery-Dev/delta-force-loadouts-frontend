@@ -39,6 +39,13 @@
             </button>
           </router-link>
 
+          <router-link to="/listar-armas">
+            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item"> <!--Exclusivo de usuário admin-->
+              <span class="material-icons">list</span>
+              listar armas
+            </button>
+          </router-link>
+
           <router-link to="/minhas-builds">
             <button class="dropdown-item">
               <span class="material-icons">assignment</span>

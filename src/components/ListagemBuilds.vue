@@ -32,8 +32,8 @@
 
     </div>
 
-    <div v-if="editando" class="editando-group" @click="fecharSeClicouFora">
-      <cadastrar-build-view @click.stop :editando="editando" :build="buildEmEdicao" @fechar-edicao="editando = false" />
+    <div v-if="editando" class="editando-group" @click="fecharEdicao">
+      <cadastrar-build-view @click.stop :editando="editando" :build="buildEmEdicao" @fechar-edicao="fecharEdicao" />
     </div>
   </div>
 
@@ -125,8 +125,9 @@ const editarBuild = async (build) => {
 
 
 //Fecha a tela de edição se clicar fora dela
-function fecharSeClicouFora() {
+const  fecharEdicao = () => {
   editando.value = false
+  buildEmEdicao.value = null
 }
 
 //Botão de remover irá aparecer para usuário admin e criador da build
@@ -383,7 +384,6 @@ const alcances = {
   background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   z-index: 1000;
-  /* Garante que estará acima da maioria dos elementos */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

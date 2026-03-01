@@ -107,7 +107,8 @@ const errors = ref({})
 const cadastrar = async () => {
     errors.value = {}
     if(isRegisterBlocked()){
-        notify("Aguarde um tempo para cadastrar novo usuário", "error")
+        notify("Aguarde um tempo para cadastrar um novo usuário!", "warning")
+        router.push('/login')
         return
     }
 
@@ -137,7 +138,7 @@ const cadastrar = async () => {
     min-height: 100vh;
     background-image: url("../assets/back-login.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: center; 
     display: flex;
     align-items: center;
     justify-content: center;

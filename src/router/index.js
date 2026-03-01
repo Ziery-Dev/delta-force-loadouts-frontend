@@ -10,6 +10,7 @@ import FavoritosView from '@/views/FavoritosView.vue'
 import RequisicaoLogin from '@/components/RequisicaoLogin.vue'
 import RegistrarUsuarioView from '@/views/RegistrarUsuarioView.vue'
 import ListarUsuariosView from '@/views/ListarUsuariosView.vue'
+import ListarArmasView from '@/views/ListarArmasView.vue'
 
 const routes = [
   {
@@ -79,6 +80,13 @@ const routes = [
     path: "/listar-usuarios",
     name: "listarUsuarios",
     component: ListarUsuariosView,
+    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+
+  },
+  {
+    path: "/listar-armas",
+    name: "listarArmas",
+    component: ListarArmasView,
     meta: { requiresAuth: true, requiredRole: "ADMIN"  },
 
   },
