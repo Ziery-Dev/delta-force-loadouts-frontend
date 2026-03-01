@@ -22,6 +22,10 @@
 
         </div>
 
+          <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+      :anteriorPg="anteriorPg" />
+
+
 
     </div>
 
@@ -32,21 +36,34 @@
 
 <script setup>
 import { useUserStore } from '@/stores/user';
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth';
 import { notify } from '@/utils/notify';
+import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 
 
 const authStore = useAuthStore()
 const userStore = useUserStore()
 
+const currentPage = computed(() => userStore.currentPage)
+const totalPages  = computed(() => userStore.totalPages)
 
 
 onMounted(() => {
     userStore.listarUsuarios()
 })
 
+
+const proximaPg = () => {
+  if (currentPage.value + 1 >= totalPages.value) return
+  userStore.listarUsuarios(currentPage.value + 1)
+}
+
+const anteriorPg = () => {
+  if (currentPage.value <= 0) return
+  userStore.listarUsuarios(currentPage.value - 1)
+}
 
 const remover = async (id) => {
     if (!authStore.isAuthenticated) {
@@ -88,6 +105,9 @@ const toggleBloquear = async (user) => {
         }
     }
 }
+
+
+
 
 </script>
 <style scoped>

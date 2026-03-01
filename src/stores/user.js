@@ -6,19 +6,30 @@ export const useUserStore = defineStore('user', {
     state: () => {
         return {
             usuarios: [],
+            currentPage: 0,
+            totalPages: 0
         }
     },
 
     actions: {
-        async listarUsuarios() {
+
+        async listarUsuarios(page = 0) {
             try {
-                const response = await api.get('/users')
-                this.usuarios = response.data
-            }
-            catch (error) { //ver isso aqui depois...
+                const response = await api.get('/users', {
+                    params: {
+                        page: page,
+                        size: 30
+                    }
+                })
+
+                this.usuarios = response.data.content
+                this.currentPage = response.data.number
+                this.totalPages = response.data.totalPages
+
+            } catch (error) {
                 if (error?.response?.status === 401) return
                 console.log(error)
-                throw error;
+                throw error
             }
         },
 
