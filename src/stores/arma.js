@@ -54,7 +54,7 @@ export const useArmaStore = defineStore('arma', {
         async editarArma(arma, id){
             try {
                const response =  await api.put(`/arma/${id}`, arma)
-                const index = this.armas.findIndex(b => b.id === id)
+                const index = this.armas.findIndex(a => a.id === id)
                 if (index !== -1) {
                     this.armas[index] = response.data
                 }

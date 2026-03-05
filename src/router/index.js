@@ -11,6 +11,7 @@ import RequisicaoLogin from '@/components/RequisicaoLogin.vue'
 import RegistrarUsuarioView from '@/views/RegistrarUsuarioView.vue'
 import ListarUsuariosView from '@/views/ListarUsuariosView.vue'
 import ListarArmasView from '@/views/ListarArmasView.vue'
+import ListarOperadoresView from '@/views/ListarOperadoresView.vue'
 
 const routes = [
   {
@@ -87,6 +88,14 @@ const routes = [
     path: "/listar-armas",
     name: "listarArmas",
     component: ListarArmasView,
+    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+
+  },
+  
+  {
+    path: "/listar-operadores",
+    name: "listarOperadores",
+    component: ListarOperadoresView,
     meta: { requiresAuth: true, requiredRole: "ADMIN"  },
 
   },

@@ -31,6 +31,12 @@
               cadastrar operador
             </button>
           </router-link>
+          <router-link to="/listar-operadores"> <!--Exclusivo de usuário admin-->
+            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
+              <span class="material-icons">person_search</span>
+              Listar operadores
+            </button>
+          </router-link>
 
           <router-link to="/cadastrar-arma">
             <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item"> <!--Exclusivo de usuário admin-->

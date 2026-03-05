@@ -3,7 +3,7 @@
 
     <div class="cadastro-group">
 
-        <h1>Cadastre um novo operador</h1>
+        <h1>{{ props.editando ? "Editar operador" : "Cadastrar operador" }}</h1>
 
         <form @submit.prevent="cadastrar">
 
@@ -24,6 +24,8 @@
 
 
             <button type="submit"> Cadastrar</button>
+            <button  @click="emit('fechar-edicao')" v-if="props.editando" type="button"> Cancelar</button>
+
 
         </form>
 
@@ -36,13 +38,21 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps, defineEmits } from 'vue';
 import { useOperadorStore } from '@/stores/operador';
 import { notify } from '@/utils/notify';
 
 
 
 const operadorStore = useOperadorStore()
+
+const props = defineProps({
+    operador: Object,
+    editando: Boolean,
+})
+
+const emit = defineEmits(['fechar-edicao'])
+
 
 
 onMounted(() => {
@@ -56,6 +66,11 @@ const errors = ref({});
 const initialForm = { name: '', category: null }
 const form = ref({ ...initialForm })
 
+//Se estiver no modo edição, copia os dados do operador para o formulário, assim preenchendo os inputs
+if (props.editando == true) {
+    form.value = { ...props.operador }
+}
+
 
 const categoriaOperador = [
     { label: 'Assalto', value: 'ASSALTO' },
@@ -68,21 +83,39 @@ const categoriaOperador = [
 
 
 const cadastrar = async () => {
+    if (!props.editando) {
+        try {
+            await operadorStore.cadastrarOperador(form.value)
+            notify("Sucesso ao cadastrar operador!", "success")
+            Object.assign(form.value, initialForm) //Limpa o formulário após cadastro
+            errors.value = {}
 
-    try {
-        await operadorStore.cadastrarOperador(form.value)
-        notify("Sucesso ao cadastrar operador!","success")
-        Object.assign(form.value, initialForm) //Limpa o formulário após cadastro
-        errors.value = {}
-
-    }
-    catch (error) {
-        console.log(error.response?.data)
-        if (error.response?.data) {
-            errors.value = error.response.data
-        } else if (error.data) {
-            errors.value = error.data
         }
+        catch (error) {
+            console.log(error.response?.data)
+            if (error.response?.data) {
+                errors.value = error.response.data
+            } else if (error.data) {
+                errors.value = error.data
+            }
+        }
+    }
+    else {
+        try {
+            await operadorStore.editarOperador(form.value, props.operador.id)
+            notify("Sucesso ao editar operador!", "success")
+            errors.value = {}
+
+        }
+        catch (error) {
+            console.log(error.response?.data)
+            if (error.response?.data) {
+                errors.value = error.response.data
+            } else if (error.data) {
+                errors.value = error.data
+            }
+        }
+
     }
 
 }
@@ -101,6 +134,7 @@ const cadastrar = async () => {
 form {
     width: 70%;
     max-width: 400px;
+    min-width: 300px;
     padding: 2rem;
     border-radius: 10px;
     background: #0f2910;
@@ -153,13 +187,30 @@ button {
     cursor: pointer;
     transition: all 0.6s;
     color: rgb(255, 255, 255);
+    margin: 5px;
 }
 
-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 0px 3px 0.5px white;
-    background-color: #38e76a;
+button[type = "button"] {  /* somente o botão de cancelar */
+ background-color: #3f0808;
+}
 
+
+/*Responsvidade */
+@media (hover: hover) and (pointer: fine) {
+
+    button:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 0px 3px 0.5px white;
+        background-color: #38e76a;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    button:active {
+        transform: scale(1.1);
+        box-shadow: 0px 0px 3px 0.5px white;
+        background-color: #38e76a;
+    }
 }
 
 h1 {

@@ -22,14 +22,9 @@
 
         </div>
 
-          <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
-      :anteriorPg="anteriorPg" />
-
-
-
+        <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+            :anteriorPg="anteriorPg" />
     </div>
-
-
 
 </template>
 
@@ -47,7 +42,7 @@ const authStore = useAuthStore()
 const userStore = useUserStore()
 
 const currentPage = computed(() => userStore.currentPage)
-const totalPages  = computed(() => userStore.totalPages)
+const totalPages = computed(() => userStore.totalPages)
 
 
 onMounted(() => {
@@ -56,13 +51,13 @@ onMounted(() => {
 
 
 const proximaPg = () => {
-  if (currentPage.value + 1 >= totalPages.value) return
-  userStore.listarUsuarios(currentPage.value + 1)
+    if (currentPage.value + 1 >= totalPages.value) return
+    userStore.listarUsuarios(currentPage.value + 1)
 }
 
 const anteriorPg = () => {
-  if (currentPage.value <= 0) return
-  userStore.listarUsuarios(currentPage.value - 1)
+    if (currentPage.value <= 0) return
+    userStore.listarUsuarios(currentPage.value - 1)
 }
 
 const remover = async (id) => {
@@ -72,7 +67,7 @@ const remover = async (id) => {
     }
     try {
         await userStore.removerUsuario(id)
-        notify("Usuário removido!","warning")
+        notify("Usuário removido!", "warning")
     }
     catch (error) {
         const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
@@ -91,7 +86,7 @@ const toggleBloquear = async (user) => {
         }
         catch (error) {
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
-            notify(mensagem, "error") 
+            notify(mensagem, "error")
         }
     }
     else {
@@ -124,7 +119,6 @@ const toggleBloquear = async (user) => {
     max-width: 400px;
 }
 
-
 .user-group {
     box-shadow: 0px 0px 2px 0.5px rgb(255, 255, 255);
     border-radius: 2px;
@@ -133,7 +127,6 @@ const toggleBloquear = async (user) => {
 
 
 }
-
 
 .user-group li {
     list-style: none;
