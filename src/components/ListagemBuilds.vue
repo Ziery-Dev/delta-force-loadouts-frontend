@@ -22,10 +22,13 @@
       </div>
       <div class="like-group">
         <button @click="avaliarBuild(b.id, 1)" :class="{ ativo: b.likedByUser }">
+          <span>{{ b.likeCount }}</span>
           <span class="material-icons">thumb_up</span>
         </button>
         <button @click="avaliarBuild(b.id, -1)" :class="{ ativo: b.dislikedByUser }">
           <span class="material-icons like-deslike">thumb_down</span>
+          <span>{{ b.dislikeCount }}</span>
+
         </button>
       </div>
 
@@ -79,6 +82,7 @@ onMounted(async () => {
     await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
   }
 
+
 })
 
 
@@ -125,7 +129,7 @@ const editarBuild = async (build) => {
 
 
 //Fecha a tela de edição se clicar fora dela
-const  fecharEdicao = () => {
+const fecharEdicao = () => {
   editando.value = false
   buildEmEdicao.value = null
 }
@@ -245,7 +249,7 @@ const alcances = {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .loadout-group {
   width: 80%;
   margin: 20px auto;
@@ -340,6 +344,7 @@ const alcances = {
   transition: all 0.3s;
   box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
+
 }
 
 
@@ -352,28 +357,33 @@ const alcances = {
   justify-content: center;
   align-items: center;
 
-}
+  button {
+    height: 30px;
+    margin: 0 5px;
+    color: rgb(13, 212, 72);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+
+    span {
+      margin: 0 3px;
+    }
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    color: #ffffff;
+  }
+
+  .ativo {
+    transform: scale(1.1);
+    color: #ffffff;
+  }
 
 
-.like-group button {
-  height: 30px;
-  margin: 0 5px;
-  color: rgb(13, 212, 72);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-
-}
-
-.like-group button:hover {
-  transform: scale(1.1);
-  color: #ffffff;
-}
-
-.like-group .ativo {
-  transform: scale(1.1);
-  color: #ffffff;
 }
 
 
