@@ -8,6 +8,9 @@
                     {{ errors.global }}
                 </p>
 
+
+
+
                 <div class="field">
                     <label for="username">Usuário</label>
                     <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" required
@@ -39,8 +42,11 @@
             </div>
 
             <div class="login-footer">
-                <RouterLink to="/registro">cadastre-se</RouterLink>
+                <RouterLink to="/">Home</RouterLink> /
+                <RouterLink to="/registro">Cadastre-se</RouterLink> 
+
             </div>
+
         </section>
     </main>
 </template>
@@ -136,7 +142,7 @@ function togleSenha() {
     border-radius: 6px;
     border: 1px solid #333;
     background-color: #000;
-    caret-color: #19db50; 
+    caret-color: #19db50;
     color: #fff;
     padding: 0 10px;
 
@@ -199,11 +205,11 @@ function togleSenha() {
 /*Exibição de senha */
 
 
-.field-senha{
+.field-senha {
     position: relative;
 }
 
-.togleSenha-botao{
+.togleSenha-botao {
     position: absolute;
     transform: translateY(-50%);
     top: 50%;
@@ -213,7 +219,7 @@ function togleSenha() {
 
 }
 
-.material-icons{
+.material-icons {
     background: transparent;
     color: white;
 }
@@ -229,8 +235,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #000 inset;
-  -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0 1000px #000 inset;
+    -webkit-text-fill-color: #fff;
 }
-
 </style>

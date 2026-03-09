@@ -58,8 +58,6 @@ import { format } from 'date-fns';
 const props = defineProps({
   builds: {
     type: Array,
-    required: true,
-    // Garante que se for um array vazio, o valor padrão é []
     default: () => []
   }
 })
@@ -77,9 +75,12 @@ const buildEmEdicao = ref(null)
 
 
 onMounted(async () => {
-  await armaStore.listarArmas()
-  if (authStore.isAuthenticated) { //Impede que o edpoint seja chamado caso o usuário não esteja logado
-    await favoritosStore.listarFavoritos()  //garante o carregamento da lista de favoritos antes de realizar alguma operação
+  if (!armaStore.armas.length) {
+    await armaStore.listarArmas()
+  }
+
+  if (authStore.isAuthenticated && !favoritosStore.favoritos.length) {
+    await favoritosStore.listarFavoritos()
   }
 
 
@@ -88,27 +89,24 @@ onMounted(async () => {
 
 
 //função que busca no state de armas de armaStore, o nome da arma que corresponde a build atraves do id que a build fornece
-function getWeaponName(weaponId) {
+const getWeaponName = (weaponId) => {
   const weapon = armaStore.armas.find(a => a.id === weaponId);
   return weapon ? weapon.name : 'Desconhecida'
 
 }
 
-function getWeaponImg(weaponId) {
+const getWeaponImg = (weaponId) => {
   const weapon = armaStore.armas.find(a => a.id === weaponId);
   return weapon ? weapon.imgUrl : 'https://static.vecteezy.com/system/resources/thumbnails/001/198/850/small/weapon.png';
 }
 
 
 
-//Função que permite copiar o codigo 
-function copiarCodigo(code) {
+const copiarCodigo = (code) => {
   navigator.clipboard.writeText(code)
-    .then(() => alert('Código copiado!'))
+    .then(() => notify("Código copiado", "success"))
     .catch(err => console.error('Erro ao copiar:', err))
 }
-
-//remover build
 
 const removerBuild = async (id) => {
   try {
@@ -122,7 +120,7 @@ const removerBuild = async (id) => {
 }
 
 //editar build
-const editarBuild = async (build) => {
+const editarBuild = (build) => {
   editando.value = true
   buildEmEdicao.value = { ...build }
 }
@@ -179,14 +177,14 @@ const toggleFavorito = async (buildId) => {
 
 }
 
-//Simplemente função que diz se o usuário avaliou a build com like
+//Logica de avaliação de build
 const avaliarBuild = async (buildId, valor) => {
   if (!authStore.isAuthenticated) {
     router.push("/requisicao-login")
     return
   }
 
-  const buildAntes = buildStore.builds.find(b => b.id === buildId)
+  const buildAntes = props.builds.find(b => b.id === buildId)
 
   let acao
   let campoAntes // "likedByUser" ou "dislikedByUser"
@@ -244,9 +242,6 @@ const alcances = {
   MUITO_LONGE: "Muito longo"
 }
 
-
-
-
 </script>
 
 <style scoped lang="scss">
@@ -268,7 +263,7 @@ const alcances = {
   background-size: cover;
   background-position: center;
   width: 380px;
-  height: 450px;
+  min-height: 450px;
   border-radius: 20px;
   transition: 0.4s;
   box-shadow: 0px 0px 1px 1px rgb(34, 172, 0);
@@ -276,7 +271,7 @@ const alcances = {
 }
 
 .caixa-loadout:hover {
-  transform: scale(1.1);
+  transform: scale(1.04);
   box-shadow: 0px 0px 5px 0.4px white;
 }
 
@@ -297,14 +292,15 @@ const alcances = {
   flex-direction: column;
   justify-content: space-around;
 
-}
+  p {
+    padding: 3px;
+  }
 
-.text-group p {
-  padding: 3px;
-}
+  .nomeCampo {
+    color: rgb(216, 221, 221);
+  }
 
-.nomeCampo {
-  color: rgb(216, 221, 221);
+
 }
 
 
@@ -315,34 +311,33 @@ const alcances = {
   justify-content: center;
   background-color: #fafffa38;
   border-radius: 10px;
-}
 
-.arma-img-group img {
-  width: 60%;
+  img {
+    width: 60%;
+  }
 }
 
 .button-group {
-
   width: 100%;
   height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
 
+  button {
+    width: 20%;
+    height: 30px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: #2f3a2fc7;
+    color: rgb(13, 212, 72);
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
 
-}
 
-.button-group button {
-  width: 20%;
-  height: 30px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
-  background-color: #2f3a2fc7;
-  color: rgb(13, 212, 72);
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0px 0px 1px 0.5px rgb(168, 166, 166);
+  }
 
 
 }
@@ -389,14 +384,10 @@ const alcances = {
 
 /*Estilo editando*/
 .editando-group {
-  width: 100%;
-  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   z-index: 1000;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
   border-radius: 8px;
 }
 
