@@ -13,8 +13,8 @@
           nova build
         </button>
       </router-link>
-      <Search-input class="buscaInput" />
 
+      <Search-input class="buscaInput" />
 
       <div class="user-menu" ref="menuRef">
         <div class="user-info" @click="toggleMenu">
@@ -25,56 +25,56 @@
 
         <div v-if="menuAberto" class="dropdown">
 
-          <router-link to="/cadastrar-operador"> <!--Exclusivo de usuário admin-->
-            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
+          <router-link to="/cadastrar-operador" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false"> <!--Exclusivo de usuário admin-->
+            <button  class="dropdown-item">
               <span class="material-icons">person_add</span>
               cadastrar operador
             </button>
           </router-link>
-          <router-link to="/listar-operadores"> <!--Exclusivo de usuário admin-->
-            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
+          <router-link to="/listar-operadores" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false"> <!--Exclusivo de usuário admin-->
+            <button  class="dropdown-item">
               <span class="material-icons">person_search</span>
               Listar operadores
             </button>
           </router-link>
 
-          <router-link to="/cadastrar-arma">
-            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item"> <!--Exclusivo de usuário admin-->
+          <router-link to="/cadastrar-arma" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false" >
+            <button  class="dropdown-item"> <!--Exclusivo de usuário admin-->
               <span class="material-icons">add_box</span>
               cadastrar arma
             </button>
           </router-link>
 
-          <router-link to="/listar-armas">
-            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item"> <!--Exclusivo de usuário admin-->
+          <router-link to="/listar-armas"  v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+            <button class="dropdown-item"> <!--Exclusivo de usuário admin-->
               <span class="material-icons">list</span>
               listar armas
             </button>
           </router-link>
 
-          <router-link to="/minhas-builds">
+          <router-link to="/minhas-builds" @click="menuAberto = false">
             <button class="dropdown-item">
               <span class="material-icons">assignment</span>
               Minhas builds
             </button>
           </router-link>
 
-          <router-link to="/listar-usuarios">
-            <button v-if="authStore.user?.role === 'ADMIN'" class="dropdown-item">
+          <router-link to="/listar-usuarios" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+            <button  class="dropdown-item">
               <span class="material-icons">groups</span>
               Listar usuários
             </button>
           </router-link>
 
-          <router-link to="/favoritos">
+          <router-link to="/favoritos" @click="menuAberto = false">
             <button class="dropdown-item">
               <span class="material-icons">favorite</span>
               Favoritos
             </button>
           </router-link>
 
-          <router-link to="/login">
-            <button v-if="!authStore.isAuthenticated" class="dropdown-item">
+          <router-link to="/login" v-if="!authStore.isAuthenticated">
+            <button  class="dropdown-item">
               <span class="material-icons">login</span>
               Faça login
             </button>
@@ -168,18 +168,6 @@ nav {
   font-size: 24px;
 }
 
-/* Botão Sair */
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border: none;
-  background: transparent;
-  color: #19db50;
-  cursor: pointer;
-  font-size: 16px;
-  transition: color 0.2s;
-}
 
 
 .cadastro-button {
@@ -194,7 +182,7 @@ nav {
   transition: color 0.2s;
 }
 
-.logout-btn:hover,
+
 .cadastro-button:hover,
 .home-button:hover {
   color: #d8ffd8;
@@ -267,9 +255,6 @@ a {
   font-size: 20px;
 }
 
-router-link {
-  text-decoration: none;
-}
 
 /*Responsividade */
 @media (max-width: 625px) {
