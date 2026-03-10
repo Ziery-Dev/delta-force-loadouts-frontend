@@ -1,27 +1,35 @@
 
-<!-- Componente que nada mais é que o input de pesquisa do navbar-->
 <template>
     <div class="search-box">
         <span class="material-icons">search</span>
-        <input v-model="search" type="search" placeholder="Buscar arma ou criador..." />
-        <button @click="buscar()">Buscar</button>
+        <input v-model="search" type="search" placeholder="Buscar arma ou criador..."  @keyup.enter="buscar"
+ />
+        <button type="button" @click="buscar()">Buscar</button>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useBuildStore } from '@/stores/build';
-
 
 const buildStore = useBuildStore()
 
 
-
 const search = ref('')
 
-const buscar =  async () => {
+const buscar =  () => {
     buildStore.setSearch(search.value)
 }
+
+
+//Reseta o filtro de busca quando o campo for vazio
+watch(search, (novoValor) => {
+  if (novoValor === '') {
+    buildStore.setSearch('')
+  }
+})
+
+
 
 </script>
 
@@ -78,13 +86,6 @@ button:hover{
   .search-box input {
    width: 200px;
   }
-  .search-box .material-icons {
-     position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: #aaa;
-    pointer-events: none;
-  }
+
 }
 </style>

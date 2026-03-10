@@ -8,9 +8,6 @@
                     {{ errors.global }}
                 </p>
 
-
-
-
                 <div class="field">
                     <label for="username">Usuário</label>
                     <input id="username" v-model="username" type="text" placeholder="Digite seu usuário" required
@@ -24,7 +21,7 @@
                     <div class="field-senha">
                         <input id="password" v-model="password" :type="exibirSenha ? 'text' : 'password'"
                             placeholder="Digite sua senha" required autocomplete="current-password" />
-                        <button @click="togleSenha" type="button" class="togleSenha-botao">
+                        <button @click="toggleSenha" type="button" class="toggleSenha-botao">
                             <span class="material-icons">{{ exibirSenha ? 'visibility' : 'visibility_off' }}</span>
                         </button>
                     </div>
@@ -55,7 +52,7 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
-import { ref } from "vue"
+import { ref, watch} from "vue"
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -85,8 +82,17 @@ const fazerLogin = async () => {
     }
 }
 
+watch([password, username], (novoPassword, novoUserName) => {
+  if (novoPassword, novoUserName) {
+    errors.value.global = ''
+  }
+})
+
+
+
+
 //função que exibe a senha mudando o valor para true que muda o tipo do campo da senha de password para text
-function togleSenha() {
+const  toggleSenha = () => {
     exibirSenha.value = !exibirSenha.value
 }
 
@@ -209,7 +215,7 @@ function togleSenha() {
     position: relative;
 }
 
-.togleSenha-botao {
+.toggleSenha-botao {
     position: absolute;
     transform: translateY(-50%);
     top: 50%;

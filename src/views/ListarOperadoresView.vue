@@ -34,7 +34,6 @@ onMounted(() => {
     operadorStore.listarOperadores()
 })
 
-
 const remover = async (id) => {
     try {
         await operadorStore.removerOperador(id)
@@ -54,12 +53,10 @@ const editarArma = (operador) => {
 
 }
 
-
 const fecharEdicao = () => {
     editando.value = false,
     operadorEmEdicao.value = null
 }
-
 
 </script>
 
@@ -107,8 +104,6 @@ const fecharEdicao = () => {
                     transform: scale(1.1);
                     color: #ffffff;
                     background-color: #19db50c0;
-
-
 
                 }
             }

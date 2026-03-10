@@ -1,6 +1,4 @@
 <template>
-
-
     <div class="listagem-group">
         <h1>Lista de armas</h1>
         <ul v-for="a in armaStore.armas" :key="a.id">
@@ -76,8 +74,6 @@ const fecharEdicao = () => {
 </script>
 
 <style scoped lang="scss">
-//comecei usar scss!
-
 .listagem-group {
     width: 70%;
     gap: 20px;
@@ -116,7 +112,7 @@ const fecharEdicao = () => {
                     color: rgb(0, 0, 0);
                     margin-bottom: 2px;
                     cursor: pointer;
-                     transition: all 0.5s;
+                    transition: all 0.5s;
                 }
 
                 /*Responsvidade */
@@ -126,7 +122,7 @@ const fecharEdicao = () => {
                         transform: scale(1.1);
                         box-shadow: 0px 0px 2px 1px rgb(46, 255, 46);
                         color: #ffffff;
-                       
+
                     }
                 }
 
@@ -135,11 +131,9 @@ const fecharEdicao = () => {
                         transform: scale(1.03);
                         box-shadow: 0px 0px 5px 1px rgb(46, 255, 46);
                         color: #ffffff;
-                     
+
                     }
                 }
-
-
 
             }
 
@@ -148,9 +142,7 @@ const fecharEdicao = () => {
                     width: 100px;
 
                 }
-
             }
-
 
         }
 

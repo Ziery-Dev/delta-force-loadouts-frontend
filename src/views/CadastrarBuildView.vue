@@ -228,8 +228,6 @@ h1 {
 
 
 
-
-
 /* Esitlo para edição */
 .edicao-group {
     width: 350px;

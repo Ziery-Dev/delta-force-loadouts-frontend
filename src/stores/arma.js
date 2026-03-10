@@ -61,7 +61,6 @@ export const useArmaStore = defineStore('arma', {
             }
             catch (error){
                 if (error?.response?.status === 401) return
-            //    notify(error, "error")
                 throw error;
             }
 

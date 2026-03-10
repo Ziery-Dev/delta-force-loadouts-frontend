@@ -58,15 +58,12 @@ watch(
   }
 )
 
-
 const alcances = [
   { label: 'Curto alcance', value: 'CURTO' },
   { label: 'Médio alcance', value: 'MEDIO' },
   { label: 'Longo alcance', value: 'LONGE' },
   { label: 'Muito longo', value: 'MUITO_LONGE' }
 ]
-
-
 
 const carregarBuilds = (page = 0) => {
   buildStore.currentPage = page

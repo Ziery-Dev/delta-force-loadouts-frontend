@@ -16,15 +16,3 @@ export function setRegisterCooldown() {
   )
 }
 
-// export function getRemainingMinutes() {
-//   const until = Number(localStorage.getItem(COOLDOWN_KEY) || 0)
-//   const diff = until - Date.now()
-//   return diff > 0 ? Math.ceil(diff / 60000) : 0
-// }
-
-// export function clearRegisterCooldownIfExpired() {
-//   const until = Number(localStorage.getItem(COOLDOWN_KEY) || 0)
-//   if (until && Date.now() >= until) {
-//     localStorage.removeItem(COOLDOWN_KEY)
-//   }
-// }

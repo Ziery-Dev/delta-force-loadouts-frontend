@@ -101,9 +101,6 @@ const toggleBloquear = async (user) => {
     }
 }
 
-
-
-
 </script>
 <style scoped>
 .container {

@@ -18,14 +18,12 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-
-
   },
   {
     path: '/cadastrar-build',
     name: 'cadastrarBuild',
     component: CadastrarBuildView,
-    meta: { requiresAuth: TransformStreamDefaultController},
+    meta: { requiresAuth: true },
 
   },
 
@@ -33,14 +31,14 @@ const routes = [
     path: '/cadastrar-arma',
     name: 'cadastrarArma',
     component: CadastrarArmaView,
-    meta: { requiresAuth: true,  requiredRole: "ADMIN"  },
+    meta: { requiresAuth: true, requiredRole: "ADMIN" },
 
   },
   {
     path: '/cadastrar-operador',
     name: 'cadastrarOperador',
     component: CadastrarOperadorView,
-    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+    meta: { requiresAuth: true, requiredRole: "ADMIN" },
 
   },
   {
@@ -64,8 +62,6 @@ const routes = [
 
   },
 
-
-
   {
     path: "/login",
     name: "login",
@@ -81,26 +77,24 @@ const routes = [
     path: "/listar-usuarios",
     name: "listarUsuarios",
     component: ListarUsuariosView,
-    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+    meta: { requiresAuth: true, requiredRole: "ADMIN" },
 
   },
   {
     path: "/listar-armas",
     name: "listarArmas",
     component: ListarArmasView,
-    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+    meta: { requiresAuth: true, requiredRole: "ADMIN" },
 
   },
-  
+
   {
     path: "/listar-operadores",
     name: "listarOperadores",
     component: ListarOperadoresView,
-    meta: { requiresAuth: true, requiredRole: "ADMIN"  },
+    meta: { requiresAuth: true, requiredRole: "ADMIN" },
 
   },
-
-
 
 ]
 
@@ -119,13 +113,14 @@ router.beforeEach((to, from, next) => {
   }
 
 
+  //se o usuario comum tentar acessar rota protegida, manda ele pro home
   if (to.meta.requiredRole && auth.user?.role !== to.meta.requiredRole) {
-  return next("/") //adicionar um forbbiden aqui futuramente
-}
+    return next("/") //adicionar um forbidden aqui futuramente
+  }
 
 
-  // Impede abrir /login se já estiver logado
-  if (to.name === 'login' && auth.isAuthenticated) {
+  // Impede abrir /login se já estiver logado e registro
+  if ((to.name === 'login' || to.name === 'registro') && auth.isAuthenticated) {
     return next({ name: 'home' })
   }
   next()  // permite navegar normalmente

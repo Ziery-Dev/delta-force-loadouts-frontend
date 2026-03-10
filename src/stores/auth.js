@@ -22,15 +22,15 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = true
       }
       catch (error) {
-          // Importante: garantir que o estado não fique sujo
+        // Importante: garantir que o estado não fique sujo
         this.isAuthenticated = false
         this.token = null
+        this.user = null
         localStorage.removeItem('token')
 
-        console.log(error)
         throw error;
 
-   
+
       }
     },
 
@@ -54,19 +54,8 @@ export const useAuthStore = defineStore('auth', {
       if (token) {
         this.token = token
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        try {
-          const decoded = jwtDecode(token)
-          this.user = {
-            id: decoded.id,
-            username: decoded.sub,
-            role: decoded.role || '',
-            buildsFavoritas: decoded.favoritesBuilds || []
-          }
-          this.isAuthenticated = true
-        } catch (error) {
-          console.error('Erro ao decodificar token:', error)
-          this.logout()
-        }
+        this.decodeAndSetUser(token)
+        this.isAuthenticated = true
       }
     },
 
@@ -81,7 +70,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     hasRole(role) {
-      return this.user?.roles?.includes(role)
+      return this.user?.role === role
     }
   }
 

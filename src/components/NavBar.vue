@@ -1,7 +1,7 @@
 <template>
   <div v-if="!ocultarNavbar.includes(route.path)" class="nav-group">
     <nav>
-      <router-link to="/">
+      <router-link to="/" @click="resetarPesquisa">
         <button class="home-button">
           <span class="material-icons">home</span>
         </button>
@@ -25,27 +25,29 @@
 
         <div v-if="menuAberto" class="dropdown">
 
-          <router-link to="/cadastrar-operador" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false"> <!--Exclusivo de usuário admin-->
-            <button  class="dropdown-item">
+          <router-link to="/cadastrar-operador" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+            <!--Exclusivo de usuário admin-->
+            <button class="dropdown-item">
               <span class="material-icons">person_add</span>
               cadastrar operador
             </button>
           </router-link>
-          <router-link to="/listar-operadores" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false"> <!--Exclusivo de usuário admin-->
-            <button  class="dropdown-item">
+          <router-link to="/listar-operadores" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+            <!--Exclusivo de usuário admin-->
+            <button class="dropdown-item">
               <span class="material-icons">person_search</span>
               Listar operadores
             </button>
           </router-link>
 
-          <router-link to="/cadastrar-arma" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false" >
-            <button  class="dropdown-item"> <!--Exclusivo de usuário admin-->
+          <router-link to="/cadastrar-arma" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+            <button class="dropdown-item"> <!--Exclusivo de usuário admin-->
               <span class="material-icons">add_box</span>
               cadastrar arma
             </button>
           </router-link>
 
-          <router-link to="/listar-armas"  v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
+          <router-link to="/listar-armas" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
             <button class="dropdown-item"> <!--Exclusivo de usuário admin-->
               <span class="material-icons">list</span>
               listar armas
@@ -60,7 +62,7 @@
           </router-link>
 
           <router-link to="/listar-usuarios" v-if="authStore.user?.role === 'ADMIN'" @click="menuAberto = false">
-            <button  class="dropdown-item">
+            <button class="dropdown-item">
               <span class="material-icons">groups</span>
               Listar usuários
             </button>
@@ -74,7 +76,7 @@
           </router-link>
 
           <router-link to="/login" v-if="!authStore.isAuthenticated">
-            <button  class="dropdown-item">
+            <button class="dropdown-item">
               <span class="material-icons">login</span>
               Faça login
             </button>
@@ -97,8 +99,10 @@ import { useRouter, useRoute } from 'vue-router';
 import { ref } from 'vue'
 import { onMounted, onBeforeUnmount } from 'vue';
 import SearchInput from './SearchInput.vue';
+import { useBuildStore } from '@/stores/build';
 
 const authStore = useAuthStore()
+const buildStore = useBuildStore()
 const router = useRouter()
 const menuAberto = ref(false)
 const menuRef = ref(null)
@@ -127,6 +131,10 @@ const sairDaConta = () => {
   router.push('/login')
 }
 
+//Reseta o input de pesquisa por usuario ou arma
+const resetarPesquisa = () => {
+  buildStore.setSearch('')
+}
 onMounted(() => {
   document.addEventListener('click', handleClickFora)
 })
@@ -137,7 +145,7 @@ onBeforeUnmount(() => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /*  Barra de navegação */
 .nav-group {
   background-color: #0f2910;
@@ -147,112 +155,112 @@ onBeforeUnmount(() => {
   padding: 12px 0;
   border: 0.4px solid rgb(105, 105, 105);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
 
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 
 
-
-/* Botão Home */
-.home-button {
-  border: none;
-  background: transparent;
-  color: #19db50;
-  cursor: pointer;
-  font-size: 24px;
-}
+    /* Botão Home */
+    .home-button {
+      border: none;
+      background: transparent;
+      color: #19db50;
+      cursor: pointer;
+      font-size: 24px;
+    }
 
 
 
-.cadastro-button {
-  display: flex;
-  align-items: center;
-  border: 0.5px solid rgb(36, 163, 11);
-  border-radius: 5px;
-  background: transparent;
-  color: #19db50;
-  cursor: pointer;
-  font-size: 16px;
-  transition: color 0.2s;
-}
+    .cadastro-button {
+      display: flex;
+      align-items: center;
+      border: 0.5px solid rgb(36, 163, 11);
+      border-radius: 5px;
+      background: transparent;
+      color: #19db50;
+      cursor: pointer;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
 
 
-.cadastro-button:hover,
-.home-button:hover {
-  color: #d8ffd8;
-}
+    .cadastro-button:hover,
+    .home-button:hover {
+      color: #d8ffd8;
+    }
 
-a {
-  text-decoration: none;
-}
+    a {
+      text-decoration: none;
+    }
 
 
-/* Estilo do menu de usuário */
-.user-menu {
-  position: relative;
-  display: inline-block;
-  color: #19db50;
-}
+    /* Estilo do menu de usuário */
+    .user-menu {
+      position: relative;
+      display: inline-block;
+      color: #19db50;
+    }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  gap: 6px;
-}
+    .user-info {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      gap: 6px;
+    }
 
-.username {
-  color: #d8ffd8;
-}
+    .username {
+      color: #d8ffd8;
+    }
 
-.arrow {
-  transition: transform 0.3s ease;
-}
+    .arrow {
+      transition: transform 0.3s ease;
+    }
 
-.arrow.open {
-  transform: rotate(180deg);
-}
+    .arrow.open {
+      transform: rotate(180deg);
+    }
 
-/* Dropdown estilizado */
-.dropdown {
-  position: absolute;
-  top: 120%;
-  right: 0;
-  background-color: #0f2910;
-  border: 1px solid #2a4a2a;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 8px 0;
-  min-width: 200px;
-  z-index: 20;
-}
+    /* Dropdown estilizado */
+    .dropdown {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      background-color: #0f2910;
+      border: 1px solid #2a4a2a;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      padding: 8px 0;
+      min-width: 200px;
+      z-index: 20;
+    }
 
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: none;
-  color: #d8ffd8;
-  width: 100%;
-  text-align: left;
-  padding: 10px 14px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      color: #d8ffd8;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-.dropdown-item:hover {
-  background-color: #1b1b1b;
-}
+    .dropdown-item:hover {
+      background-color: #1b1b1b;
+    }
 
-.dropdown-item .material-icons {
-  font-size: 20px;
+    .dropdown-item .material-icons {
+      font-size: 20px;
+    }
+
+  }
 }
 
 
@@ -268,8 +276,8 @@ a {
 
 /*Botão de cadastrar build */
 @media (max-width: 344px) {
-  .cadastrar-build{
-        order: 98;
+  .cadastrar-build {
+    order: 98;
   }
 }
 </style>

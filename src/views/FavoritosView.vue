@@ -11,7 +11,6 @@
 
 </template>
 
-
 <script setup>
 
 import ListagemBuilds from '@/components/ListagemBuilds.vue';
@@ -19,8 +18,6 @@ import { onMounted } from 'vue';
 import { useFavoritosStore } from '@/stores/favoritos';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { storeToRefs } from 'pinia';
-
-
 
 const favoritosStore = useFavoritosStore()
 
@@ -40,7 +37,6 @@ const anteriorPg = () => {
     }
 
 }
-
 
 const { currentPage, totalPages } = storeToRefs(favoritosStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
 
