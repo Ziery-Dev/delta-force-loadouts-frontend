@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
-import { notify } from "@/utils/notify";
 
 export const useArmaStore = defineStore('arma', {
 
@@ -17,8 +16,7 @@ export const useArmaStore = defineStore('arma', {
                 this.armas = response.data
             }
             catch (error) {
-                if (error?.response?.status === 401) return
-                notify(error, "error")
+                if (error?.response?.status === 401) return   // 401 é tratado globalmente no interceptor
                 throw error;
             }
         },
@@ -31,19 +29,18 @@ export const useArmaStore = defineStore('arma', {
 
             catch (error) {
                 if (error?.response?.status === 401) return
-                notify(error, "error")
                 throw error;
             }
 
 
         },
 
-        async removerArma(id){
-            try{
-                 await api.delete (`/arma/${id}`)
-                this.armas = this.armas.filter( a => a.id !== id) //filtra armas removendo localmente a arma excluida sem necessida de recarregar as informações da api
+        async removerArma(id) {
+            try {
+                await api.delete(`/arma/${id}`)
+                this.armas = this.armas.filter(a => a.id !== id) //filtra armas removendo localmente a arma excluida sem necessida de recarregar as informações da api
             }
-               catch (error) {
+            catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
             }
@@ -51,15 +48,15 @@ export const useArmaStore = defineStore('arma', {
 
         },
 
-        async editarArma(arma, id){
+        async editarArma(arma, id) {
             try {
-               const response =  await api.put(`/arma/${id}`, arma)
+                const response = await api.put(`/arma/${id}`, arma)
                 const index = this.armas.findIndex(a => a.id === id)
                 if (index !== -1) {
                     this.armas[index] = response.data
                 }
             }
-            catch (error){
+            catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
             }

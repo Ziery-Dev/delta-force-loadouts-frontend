@@ -5,7 +5,7 @@
             <li>
                 <div class="card-arma">
                     <div class="img-arma">
-                        <img :src="a.imgUrl">
+                        <img :src="a.imgUrl" :alt="`Imagem da arma ${a.name}`">
                     </div>
                     <div class="info-arma">
                         <p> {{ a.name }}</p>
@@ -44,8 +44,15 @@ const armaEmEdicao = ref(null)
 
 
 onMounted(async () => {
-    await armaStore.listarArmas()
-
+    try {
+        if (!armaStore.armas.length) {
+            await armaStore.listarArmas()
+        }
+    }
+    catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar armas"
+        notify(mensagem, "error")
+    }
 })
 
 const removerArma = async (id) => {

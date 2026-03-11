@@ -1,9 +1,9 @@
 <template>
-  <div class="cadastro-group">
+    <div class="cadastro-group">
 
         <h1>{{ props.editando ? "Editar arma" : "Cadastre uma nova arma" }}</h1>
 
-        <form @submit.prevent="cadastrar">
+        <form @submit.prevent="salvarArma">
 
             <p class="erro">{{ errors.erro }}</p>
 
@@ -21,7 +21,7 @@
             <p v-if="errors.category" class="erro">{{ errors.category }}</p>
 
             <label for="operador">Selecione os operadores compatíveis</label>
-            <div class="selecinar-operador">
+            <div class="selecionar-operador">
                 <div v-for="op in operadorStore.operadores" :key="op.id">
                     <p :for="op.id">{{ op.name }}</p>
                     <input type="checkbox" :id="op.id" :value="op.id" v-model="form.operatorIds" name="operador" />
@@ -35,7 +35,8 @@
             <p v-if="errors.imgUrl" class="erro">{{ errors.imgUrl }}</p>
 
             <button type="submit"> {{ props.editando ? "Editar" : "Cadastrar" }}</button>
-            <button class="botao-cancelar" type="button" v-if="props.editando" @click="emit('fechar-edicao')"> Cancelar</button>
+            <button class="botao-cancelar" type="button" v-if="props.editando" @click="emit('fechar-edicao')">
+                Cancelar</button>
 
         </form>
     </div>
@@ -45,7 +46,7 @@
 
 <script setup>
 import { useArmaStore } from '@/stores/arma';
-import { ref, onMounted, defineProps, defineEmits } from 'vue';
+import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import { useOperadorStore } from '@/stores/operador';
 import { notify } from '@/utils/notify';
 
@@ -55,9 +56,14 @@ const operadorStore = useOperadorStore()
 const emit = defineEmits(['fechar-edicao'])
 
 
-onMounted(() => {
-    operadorStore.listarOperadores()
 
+onMounted(async () => {
+    try {
+        await operadorStore.listarOperadores()
+    } catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar operadores"
+        notify(mensagem, "error")
+    }
 })
 
 const props = defineProps({
@@ -67,9 +73,35 @@ const props = defineProps({
 
 const errors = ref({});
 
+
 // dessa forma para poder limpar o formulário
 const initialForm = { name: '', category: null, imgUrl: '', operatorIds: [] }
 const form = ref({ ...initialForm })
+
+
+//Limpeza dos campos de erro quando o usário começar corrigir os campos
+watch(() => form.value.name, (novoName) => {
+    if (novoName) {
+        errors.value.name = ''
+    }
+})
+
+watch(() => form.value.category, (novaCategory) => {
+    if (novaCategory) {
+        errors.value.category = ''
+    }
+})
+watch(() => form.value.operatorIds, (novoOperatorId) => {
+    if (novoOperatorId) {
+        errors.value.operatorIds = ''
+    }
+})
+watch( () => form.value.imgUrl, (novaImg) => {
+    if (novaImg) {
+        errors.value.imgUrl = ''
+    }
+})
+
 
 //Se no modo edição, o form é preenchido com os dados da arma selecionada na listagem
 if (props.editando) {
@@ -85,12 +117,12 @@ const categoriaArma = [
     { label: 'SR', value: 'SR' }
 ]
 
-const cadastrar = async () => {
+const salvarArma = async () => {
     if (!props.editando) {
-        if (form.value.operatorIds.length === 0) {
-            errors.value.operatorIds = "Selecione pelo menos um operador"
-            return
-        }
+        // if (form.value.operatorIds.length === 0) {
+        //     errors.value.operatorIds = "Selecione pelo menos um operador"
+        //     return
+        // }
         try {
             await armaStore.cadastrarArma(form.value)
             notify("Sucesso ao cadastrar arma!", "success")
@@ -99,12 +131,17 @@ const cadastrar = async () => {
 
         }
         catch (error) {
-            console.log(error.response?.data)
-            if (error.response?.data) {
-                errors.value = error.response.data
-            } else if (error.data) {
-                errors.value = error.data
+            if (error?.response?.status === 400) {
+                if (error.response?.data) {
+                    errors.value = error.response.data
+                } else if (error.data) {
+                    errors.value = error.data
+                }
+                return
             }
+            const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+            notify(mensagem, "error")
+
         }
 
     }
@@ -117,7 +154,6 @@ const cadastrar = async () => {
 
         }
         catch (error) {
-            console.log(error.response?.data)
             if (error.response?.data) {
                 errors.value = error.response.data
             } else if (error.data) {
@@ -140,114 +176,114 @@ const cadastrar = async () => {
 
 }
 
-    form {
-        width: 70%;
-        max-width: 400px;
-        padding: 2rem;
-        border-radius: 10px;
-        background: #0f2910;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        color: #19db50;
-        box-shadow: 0px 0px 1px 0.5px white;
+form {
+    width: 70%;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 10px;
+    background: #0f2910;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #19db50;
+    box-shadow: 0px 0px 1px 0.5px white;
 
-    }
+}
 
-    .selecinar-operador {
-        border: 1px solid green;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-        width: 80%;
+.selecionar-operador {
+    border: 1px solid green;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    width: 80%;
 
-    }
+}
 
-    select {
-        background-color: #19db50;
-        width: 80%;
-        height: 40px;
-        border-radius: 5px;
-        border: none;
-        margin: 10px 0px 20px 0px;
-        font-weight: bold;
+select {
+    background-color: #19db50;
+    width: 80%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    margin: 10px 0px 20px 0px;
+    font-weight: bold;
 
-    }
+}
 
-    input {
-        background-color: #19db50;
-        width: 78%;
-        height: 32px;
-        border-radius: 5px;
-        border: none;
-        margin: 10px 0px 20px 0px;
-        padding: 5px;
-    }
-
-
-
-    label {
-        padding: 5px;
-        background-color: black;
-        color: #19db50;
-        border-radius: 3px;
-        border: 1px solid white;
-        font-weight: bold;
-    }
+input {
+    background-color: #19db50;
+    width: 78%;
+    height: 32px;
+    border-radius: 5px;
+    border: none;
+    margin: 10px 0px 20px 0px;
+    padding: 5px;
+}
 
 
 
-
-
-    button {
-        width: 80%;
-        height: 40px;
-        background-color: #000000;
-        border-radius: 10px;
-        border: 1px solid white;
-        cursor: pointer;
-        transition: all 0.6s;
-        color: rgb(255, 255, 255);
-        margin: 5px;
-    }
-
-    .botao-cancelar {
-        background-color: #752020;
-    }
+label {
+    padding: 5px;
+    background-color: black;
+    color: #19db50;
+    border-radius: 3px;
+    border: 1px solid white;
+    font-weight: bold;
+}
 
 
 
-    button:hover {
-        transform: scale(1.1);
-        box-shadow: 0px 0px 3px 0.5px white;
-        background-color: #38e76a;
-
-    }
-
-    h1 {
-        background-color: #38e76a;
-        color: #000000;
-        font-family: 'Arial Narrow Bold', sans-serif;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
 
 
+button {
+    width: 80%;
+    height: 40px;
+    background-color: #000000;
+    border-radius: 10px;
+    border: 1px solid white;
+    cursor: pointer;
+    transition: all 0.6s;
+    color: rgb(255, 255, 255);
+    margin: 5px;
+}
 
-    .selecinar-operador div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-size: 0.8em;
-        margin: 5px;
-        border: 1px dashed rgb(118, 197, 94);
-        padding: 5px;
-        height: 60px;
-        width: 100px;
-    }
+.botao-cancelar {
+    background-color: #752020;
+}
+
+
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 3px 0.5px white;
+    background-color: #38e76a;
+
+}
+
+h1 {
+    background-color: #38e76a;
+    color: #000000;
+    font-family: 'Arial Narrow Bold', sans-serif;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+
+
+.selecionar-operador div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 0.8em;
+    margin: 5px;
+    border: 1px dashed rgb(118, 197, 94);
+    padding: 5px;
+    height: 60px;
+    width: 100px;
+}
 
 
 
