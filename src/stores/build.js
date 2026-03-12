@@ -1,13 +1,12 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
-import { notify } from "@/utils/notify";
 
 export const useBuildStore = defineStore('build', {
 
     state: () => {
         return {
             builds: [],
-            minhas_builds: [],
+            minhasBuilds: [],
             search: '',
             currentPage: 0,
             totalPages: 0,
@@ -23,12 +22,7 @@ export const useBuildStore = defineStore('build', {
                 return response.data
             }
             catch (error) {
-                if (error?.response?.status === 401) return null
-                if(error?.response?.status === 429){
-                    notify("Muitas tentativas de cadastro, tente novamente mais tarde!", "warning")
-                    return null
-                }
-                notify(error, "error")
+                if (error?.response?.status === 401) return
                 throw error
             }
         },
@@ -40,7 +34,6 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                notify(error, "error")
                 throw error
             }
         },
@@ -52,11 +45,9 @@ export const useBuildStore = defineStore('build', {
                 if (index !== -1) {
                     this.builds[index] = response.data
                 }
-                return response.data
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                notify(error, "error")
                 throw error
             }
 
@@ -65,15 +56,13 @@ export const useBuildStore = defineStore('build', {
         async listarMinhasBuilds(page = 0, size = 10, sort = 'createdAt,desc') {
             try {
                 const response = await api.get(`/build/minhas-builds?page=${page}&size=${size}&sort=${sort}`)
-
-                this.minhas_builds = response.data.content
+                this.minhasBuilds = response.data.content
                 this.totalPages = response.data.totalPages;
                 this.currentPage = response.data.number;
 
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                notify(error, "error")
                 throw error;
             }
 
@@ -94,7 +83,7 @@ export const useBuildStore = defineStore('build', {
                 return updated
             }
             catch (error) {
-                notify(error, "error")
+                if (error?.response?.status === 401) return
                 throw error;
             }
         },
@@ -113,7 +102,7 @@ export const useBuildStore = defineStore('build', {
                 return updated
             }
             catch (error) {
-                notify(error, "error")
+                if (error?.response?.status === 401) return
                 throw error;
             }
         },
@@ -138,26 +127,16 @@ export const useBuildStore = defineStore('build', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                notify(error, "error")
                 throw error;
             }
         },
 
 
         setSearch(valor) {
-            this.search = valor,
-                this.currentPage = 0
+            this.search = valor
+            this.currentPage = 0
 
         }
-
-
-
-        // proximaPag() {
-        //     this.currentPage += 1
-        // }
-
-
-
 
     }
 

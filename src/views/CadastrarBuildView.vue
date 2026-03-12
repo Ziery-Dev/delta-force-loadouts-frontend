@@ -3,19 +3,19 @@
 
         <h1>{{ props.editando ? "Editar build" : "Cadastre uma nova build" }}</h1>
 
-        <form @submit.prevent="cadastrar">
+        <form @submit.prevent="salvarBuild">
 
             <p class="erro">{{ errors.erro }}</p>
 
             <label for="arma">Selecione a arma:</label>
             <select v-model="form.weaponId" name="arma" id="arma" required>
-                <option value=null disabled>Selecione...</option>
+                <option :value=null disabled>Selecione...</option>
                 <option v-for="arma in armaStore.armas" :key="arma.id" :value="arma.id">{{ arma.name }}</option>
             </select>
             <p v-if="errors.weaponId" class="erro">{{ errors.weaponId }}</p>
 
 
-            <label for="descricao">Descriação da build:</label>
+            <label for="descricao">Descrição da build:</label>
             <input v-model="form.description" id="descricao" type="text" maxlength="200">
             <p v-if="errors.description" class="erro">{{ errors.description }}</p>
 
@@ -23,7 +23,7 @@
 
             <label for="alcance">Selecione o alcance:</label>
             <select v-model="form.distance_range" name="alcance" id="alcance" required>
-                <option value=null disabled>Selecione...</option>
+                <option :value=null disabled>Selecione...</option>
                 <option v-for="alcance in alcances" :key="alcance" :value="alcance.value">{{ alcance.label }}</option>
             </select>
             <p v-if="errors.distance_range" class="erro">{{ errors.distance_range }}</p>
@@ -34,8 +34,9 @@
             <p v-if="errors.code" class="erro">{{ errors.code }}</p>
 
 
-            <button type="submit">{{ editando ? "Editar" : "Cadastrar" }}</button>
-            <button class="cancelarEdicao" type="button" v-if="props.editando" @click="emit('fechar-edicao')">Cancelar</button>
+            <button type="submit" :disabled="isSubmitting">{{ props.editando ? "Editar" : "Cadastrar" }}</button>
+            <button class="cancelarEdicao" type="button" v-if="props.editando"
+                @click="emit('fechar-edicao')">Cancelar</button>
 
         </form>
 
@@ -69,6 +70,8 @@ const armaStore = useArmaStore();
 
 const errors = ref({});
 
+const isSubmitting = ref(false)
+
 const form = ref({
     code: '',
     description: '',
@@ -77,14 +80,17 @@ const form = ref({
 })
 
 
-onMounted(() => {
-    armaStore.listarArmas()
+onMounted(async () => {
+    try {
+        await armaStore.listarArmas()
+    } catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar armas"
+        notify(mensagem, "error")
+    }
 
-    //se tiver uma build vindo de props, significa que é uma edição, então copia os dados da build para o formulario
     if (props.build) {
         form.value = { ...props.build }
     }
-
 })
 
 
@@ -98,40 +104,52 @@ const alcances = [
 
 
 
-const cadastrar = async () => {
-    if (!props.editando) {
-        try {
-            const created = await buildStore.cadastrarBuild(form.value)
-            if (!created) return // não navega, não mostra sucesso
-            router.push('/')
+const salvarBuild = async () => {
+    if (isSubmitting.value) return
+    isSubmitting.value = true
+    errors.value = {}
+
+    try {
+        if (!props.editando) {
+
+            await buildStore.cadastrarBuild(form.value)
             notify("Build cadastrada!", "success");
+            router.push('/')
         }
-        catch (error) {
-            if (error.response?.data) {
-                errors.value = error.response.data
-            }
-            else if (error.data) {
-                errors.value = error.data
-            }
-        }
-    }
-    else {
-        try {
+        else {
             await buildStore.editarBuild(form.value, props.build.id)
             emit('fechar-edicao')
+            notify("Build editada!", "success");
         }
-        catch (error) {
+    }
+    catch (error) {
+        if (error?.response?.status === 400) {
             if (error.response?.data) {
                 errors.value = error.response.data
             }
             else if (error.data) {
                 errors.value = error.data
             }
+            return
         }
+        if (error?.response?.status === 429) {
+            const mensagem = error.response?.data?.erro
+            notify(mensagem, "warning")
+            return
+        }
+        const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
+        notify(mensagem, "error")
+
     }
 
-
+    finally {
+        isSubmitting.value = false
+    }
 }
+
+
+
+
 
 </script>
 
@@ -250,15 +268,15 @@ h1 {
 
 }
 
-.edicao-group label{
+.edicao-group label {
     width: 80%;
 }
 
-.edicao-group h1{
+.edicao-group h1 {
     width: 80%;
     margin: 10px auto;
 
-  
+
 }
 
 .edicao-group .cancelarEdicao {

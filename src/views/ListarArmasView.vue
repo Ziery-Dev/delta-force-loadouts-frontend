@@ -76,8 +76,6 @@ const fecharEdicao = () => {
         armaEmEdicao.value = null
 }
 
-
-
 </script>
 
 <style scoped lang="scss">

@@ -82,10 +82,7 @@ onMounted(async () => {
   if (authStore.isAuthenticated && !favoritosStore.favoritos.length) {
     await favoritosStore.listarFavoritos()
   }
-
-
 })
-
 
 
 //função que busca no state de armas de armaStore, o nome da arma que corresponde a build atraves do id que a build fornece
@@ -200,7 +197,8 @@ const avaliarBuild = async (buildId, valor) => {
     return
   }
 
-  const jaTinhaVotado = buildAntes && buildAntes[campoAntes] === true
+  const jaVotado = buildAntes && buildAntes[campoAntes] === true
+
   try {
     const updated = await acao(buildId)
 
@@ -208,7 +206,7 @@ const avaliarBuild = async (buildId, valor) => {
     // Se antes era false e agora virou true => computou o voto
     const agoraTemVoto = updated && updated[campoAntes] === true
 
-    if (jaTinhaVotado && !agoraTemVoto) {
+    if (jaVotado && !agoraTemVoto) {
       notify("Voto removido!", "success")
     } else {
       notify("Voto computado!", "success")

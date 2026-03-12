@@ -35,13 +35,20 @@ import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { useBuildStore } from '@/stores/build';
 import { onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { notify } from '@/utils/notify';
 
 
 const buildStore = useBuildStore()
 
 //Carrega todas a builds antes de passar via props para listagem de builds
 onMounted(() => {
-  carregarBuilds(0)
+  try{
+    carregarBuilds(0)
+  }
+  catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro ao carregar builds"
+    notify(mensagem, "error")
+  }
 });
 
 
@@ -54,7 +61,7 @@ const form = ref({
 watch(
   () => [form.value.ordem, form.value.alcance, buildStore.search],
   () => {
-    carregarBuilds(0) 
+    carregarBuilds(0)
   }
 )
 
@@ -65,15 +72,17 @@ const alcances = [
   { label: 'Muito longo', value: 'MUITO_LONGE' }
 ]
 
-const carregarBuilds = (page = 0) => {
-  buildStore.currentPage = page
-  buildStore.listarBuilds({
-    sort: form.value.ordem.sort,
-    order: form.value.ordem.order,
-    alcance: form.value.alcance,
-    search: buildStore.search,
-    page
-  })
+const carregarBuilds = async (page = 0) => {
+
+    buildStore.currentPage = page
+    await buildStore.listarBuilds({
+      sort: form.value.ordem.sort,
+      order: form.value.ordem.order,
+      alcance: form.value.alcance,
+      search: buildStore.search,
+      page
+    })
+  
 }
 
 
