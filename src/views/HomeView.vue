@@ -41,15 +41,14 @@ import { notify } from '@/utils/notify';
 const buildStore = useBuildStore()
 
 //Carrega todas a builds antes de passar via props para listagem de builds
-onMounted(() => {
-  try{
-    carregarBuilds(0)
-  }
-  catch (error) {
+onMounted(async () => {
+  try {
+    await carregarBuilds(0)
+  } catch (error) {
     const mensagem = error.response?.data?.erro || "Erro ao carregar builds"
     notify(mensagem, "error")
   }
-});
+})
 
 
 const form = ref({
@@ -74,25 +73,34 @@ const alcances = [
 
 const carregarBuilds = async (page = 0) => {
 
-    buildStore.currentPage = page
-    await buildStore.listarBuilds({
-      sort: form.value.ordem.sort,
-      order: form.value.ordem.order,
-      alcance: form.value.alcance,
-      search: buildStore.search,
-      page
-    })
-  
+  await buildStore.listarBuilds({
+    sort: form.value.ordem.sort,
+    order: form.value.ordem.order,
+    alcance: form.value.alcance,
+    search: buildStore.search,
+    page
+  })
+
 }
 
-
-const proximaPg = () => {
-  carregarBuilds(buildStore.currentPage + 1)
+const proximaPg = async () => {
+  try {
+    await carregarBuilds(buildStore.currentPage + 1)
+  } catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro ao carregar builds"
+    notify(mensagem, "error")
+  }
 }
 
-const anteriorPg = () => {
-  carregarBuilds(buildStore.currentPage - 1)
+const anteriorPg = async () => {
+  try {
+    await carregarBuilds(buildStore.currentPage - 1)
+  } catch (error) {
+    const mensagem = error.response?.data?.erro || "Erro ao carregar builds"
+    notify(mensagem, "error")
+  }
 }
+
 
 
 const { currentPage, totalPages } = storeToRefs(buildStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
