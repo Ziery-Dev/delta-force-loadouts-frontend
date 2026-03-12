@@ -15,8 +15,7 @@ export const useFavoritosStore = defineStore('favoritos', {
         async listarFavoritos(page = 0, size = 10, sort = 'createdAt,desc') {
             try {
                 const response = await api.get(`/users/favoritos?page=${page}&size=${size}&sort=${sort}`)
-
-
+            
                 this.favoritos = response.data.content
                 this.totalPages = response.data.totalPages;
                 this.currentPage = response.data.number;
@@ -24,18 +23,18 @@ export const useFavoritosStore = defineStore('favoritos', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
                 throw error;
             }
         },
         async adicionarFavorito(buildId) {
             try {
                 const response = await api.post(`/users/favoritos/${buildId}`)
-                this.favoritos.push(response.data)
+                if (!this.favoritos.some(f => f.id === response.data.id)) {
+                    this.favoritos.push(response.data)
+                }
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
                 throw error;
             }
         },
@@ -47,7 +46,6 @@ export const useFavoritosStore = defineStore('favoritos', {
             }
             catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
                 throw error;
             }
         }

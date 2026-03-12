@@ -18,25 +18,46 @@ import { onMounted } from 'vue';
 import { useFavoritosStore } from '@/stores/favoritos';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { storeToRefs } from 'pinia';
+import { notify } from '@/utils/notify';
 
 const favoritosStore = useFavoritosStore()
 
 
-onMounted(() => {
-    favoritosStore.listarFavoritos()
+onMounted(async () => {
+    try{
+        await favoritosStore.listarFavoritos()
+    }
+    catch(error){
+        const mensagem = error.response?.data?.erro || "Erro ao carregar builds favoritas!"
+        notify(mensagem, "error")
+    }
 })
 
-const proximaPg = () => {
-    if (favoritosStore.totalPages > 0 && favoritosStore.currentPage < favoritosStore.totalPages) { //verificação evitar aumentar pagina atual quando total de paginas for 0
-        favoritosStore.listarFavoritos(favoritosStore.currentPage + 1)
+const proximaPg = async () => {
+    if (favoritosStore.totalPages > 0 && favoritosStore.currentPage + 1 < favoritosStore.totalPages) {
+        try {
+            await favoritosStore.listarFavoritos(favoritosStore.currentPage + 1)
+        } catch (error) {
+            const mensagem = error.response?.data?.erro || "Erro ao carregar suas builds favoritas!"
+            notify(mensagem, "error")
+        }
     }
 }
-const anteriorPg = () => {
+const anteriorPg = async () => {
     if (favoritosStore.currentPage > 0) {
-        favoritosStore.listarFavoritos(favoritosStore.currentPage - 1)
+        try {
+            await favoritosStore.listarFavoritos(favoritosStore.currentPage - 1)
+        } catch (error) {
+            const mensagem = error.response?.data?.erro || "Erro ao carregar suas builds favoritas!"
+            notify(mensagem, "error")
+        }
+
     }
 
+
+
 }
+
 
 const { currentPage, totalPages } = storeToRefs(favoritosStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
 

@@ -5,7 +5,7 @@
 
         <h1>{{ props.editando ? "Editar operador" : "Cadastrar operador" }}</h1>
 
-        <form @submit.prevent="cadastrar">
+        <form @submit.prevent="salvarOperador">
 
             <p class="erro">{{ errors.erro }}</p>
 
@@ -16,15 +16,16 @@
 
             <label for="arma">Selecione a categoria do operador</label>
             <select v-model="form.category" name="categoria" id="categoria" required>
-                <option value=null disabled selected>Selecione...</option>
+                <option :value="null" disabled selected>Selecione...</option>
                 <option v-for="c in categoriaOperador" :key="c" :value="c.value">{{ c.label }}
                 </option>
             </select>
             <p v-if="errors.category" class="erro">{{ errors.category }}</p>
 
 
-            <button type="submit"> Cadastrar</button>
-            <button  @click="emit('fechar-edicao')" v-if="props.editando" type="button"> Cancelar</button>
+            <button type="submit">{{ props.editando ? "Editar" : "Cadastrar" }}</button> <button
+                @click="emit('fechar-edicao')" v-if="props.editando" type="button"> Cancelar
+            </button>
 
 
         </form>
@@ -38,7 +39,7 @@
 
 
 <script setup>
-import { ref, onMounted, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import { useOperadorStore } from '@/stores/operador';
 import { notify } from '@/utils/notify';
 
@@ -53,12 +54,6 @@ const props = defineProps({
 
 const emit = defineEmits(['fechar-edicao'])
 
-
-
-onMounted(() => {
-    operadorStore.listarOperadores()
-
-})
 
 const errors = ref({});
 
@@ -82,7 +77,8 @@ const categoriaOperador = [
 
 
 
-const cadastrar = async () => {
+const salvarOperador = async () => {
+    errors.value = {}
     if (!props.editando) {
         try {
             await operadorStore.cadastrarOperador(form.value)
@@ -92,7 +88,6 @@ const cadastrar = async () => {
 
         }
         catch (error) {
-            console.log(error.response?.data)
             if (error.response?.data) {
                 errors.value = error.response.data
             } else if (error.data) {
@@ -105,10 +100,12 @@ const cadastrar = async () => {
             await operadorStore.editarOperador(form.value, props.operador.id)
             notify("Sucesso ao editar operador!", "success")
             errors.value = {}
+            emit('fechar-edicao')
+
+
 
         }
         catch (error) {
-            console.log(error.response?.data)
             if (error.response?.data) {
                 errors.value = error.response.data
             } else if (error.data) {
@@ -190,8 +187,9 @@ button {
     margin: 5px;
 }
 
-button[type = "button"] {  /* somente o botão de cancelar */
- background-color: #3f0808;
+button[type="button"] {
+    /* somente o botão de cancelar */
+    background-color: #3f0808;
 }
 
 
@@ -223,27 +221,7 @@ h1 {
     margin-top: 10px;
 }
 
-.selecinar-operador {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-    width: 300px;
 
-}
-
-.selecinar-operador div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-size: 0.8em;
-    margin: 5px;
-    border: 1px dashed rgb(118, 197, 94);
-    padding: 5px;
-    height: 60px;
-    width: 100px;
-}
 
 
 .erro {

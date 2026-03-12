@@ -119,10 +119,7 @@ const categoriaArma = [
 
 const salvarArma = async () => {
     if (!props.editando) {
-        // if (form.value.operatorIds.length === 0) {
-        //     errors.value.operatorIds = "Selecione pelo menos um operador"
-        //     return
-        // }
+     
         try {
             await armaStore.cadastrarArma(form.value)
             notify("Sucesso ao cadastrar arma!", "success")

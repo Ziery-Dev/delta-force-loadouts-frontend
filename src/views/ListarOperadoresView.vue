@@ -5,7 +5,9 @@
 
             <ul>
                 <li v-for="operador in operadorStore.operadores" :key="operador.id">
-                    <div><p> {{ operador.name }}</p></div>
+                    <div>
+                        <p> {{ operador.name }}</p>
+                    </div>
                     <button @click="editarArma(operador)">Editar</button>
                     <button @click="remover(operador.id)">Remover</button>
                     <hr>
@@ -14,7 +16,8 @@
         </div>
 
         <div v-if="editando" class="edicao-group" @click="fecharEdicao">
-            <CadastrarOperadorView @click.stop :editando="editando" :operador="operadorEmEdicao"  @fechar-edicao="fecharEdicao" />
+            <CadastrarOperadorView @click.stop :editando="editando" :operador="operadorEmEdicao"
+                @fechar-edicao="fecharEdicao" />
         </div>
 
     </div>
@@ -31,7 +34,15 @@ const editando = ref(false)
 const operadorEmEdicao = ref(null)
 
 onMounted(() => {
-    operadorStore.listarOperadores()
+    try {
+        if (!operadorStore.operadores.length) {
+            operadorStore.listarOperadores()
+        }
+    }
+    catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar operadores"
+        notify(mensagem, "error")
+    }
 })
 
 const remover = async (id) => {
@@ -55,7 +66,7 @@ const editarArma = (operador) => {
 
 const fecharEdicao = () => {
     editando.value = false,
-    operadorEmEdicao.value = null
+        operadorEmEdicao.value = null
 }
 
 </script>
@@ -141,6 +152,6 @@ const fecharEdicao = () => {
     align-items: flex-start;
     padding: 100px 0;
 
-  
+
 }
 </style>
