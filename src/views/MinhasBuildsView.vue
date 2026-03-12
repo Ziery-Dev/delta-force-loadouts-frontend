@@ -1,8 +1,8 @@
 <template>
     <div>
         <h1>Builds que você mesmo cadastrou:</h1>
-        <h2 v-if="buildStore.minhas_builds.length === 0">Opa, parece que você ainda não possui builds cadastradas!</h2>
-        <ListagemBuilds :builds="buildStore.minhas_builds" />
+        <h2 v-if="buildStore.minhasBuilds.length === 0">Opa, parece que você ainda não possui builds cadastradas!</h2>
+        <ListagemBuilds :builds="buildStore.minhasBuilds" />
         <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
             :anteriorPg="anteriorPg" />
 
@@ -18,25 +18,44 @@ import { useBuildStore } from '@/stores/build';
 import { onMounted } from 'vue';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { storeToRefs } from 'pinia';
+import { notify } from '@/utils/notify';
 
 
 
 const buildStore = useBuildStore();
 
 
-onMounted(() => {
-    buildStore.listarMinhasBuilds()
+onMounted(async () => {
+    try {
+        await buildStore.listarMinhasBuilds()
+    } catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar suas builds"
+        notify(mensagem, "error")
+    }
 })
 
-const proximaPg = () => {
-    if (buildStore.totalPages > 0 && buildStore.currentPage < buildStore.totalPages) { //verificação evitar aumentar pagina atual quando total de paginas for 0
-        buildStore.listarMinhasBuilds(buildStore.currentPage + 1)
+const proximaPg = async () => {
+    if (buildStore.totalPages > 0 && buildStore.currentPage + 1 < buildStore.totalPages) {
+        try {
+            await buildStore.listarMinhasBuilds(buildStore.currentPage + 1)
+        } catch (error) {
+            const mensagem = error.response?.data?.erro || "Erro ao carregar suas builds"
+            notify(mensagem, "error")
+        }
     }
 }
-const anteriorPg = () => {
+const anteriorPg = async () => {
     if (buildStore.currentPage > 0) {
-        buildStore.listarMinhasBuilds(buildStore.currentPage - 1)
+        try {
+            await buildStore.listarMinhasBuilds(buildStore.currentPage - 1)
+        } catch (error) {
+            const mensagem = error.response?.data?.erro || "Erro ao carregar suas builds"
+            notify(mensagem, "error")
+        }
+
     }
+
+
 
 }
 
@@ -44,4 +63,3 @@ const { currentPage, totalPages } = storeToRefs(buildStore); //Usado para passar
 
 
 </script>
-
