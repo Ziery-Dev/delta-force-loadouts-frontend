@@ -28,7 +28,6 @@ export const useUserStore = defineStore('user', {
 
             } catch (error) {
                 if (error?.response?.status === 401) return
-                console.log(error)
                 throw error
             }
         },
@@ -36,11 +35,11 @@ export const useUserStore = defineStore('user', {
         async cadastrarUsuario(usuario) {
             try {
                 const response = await api.post('/users', usuario)
-                this.usuarios.push(response)
+                this.usuarios.push(response.data)
             }
 
             catch (error) {
-                console.log(error)
+                if (error?.response?.status === 401) return   // 401 é tratado globalmente no interceptor
                 throw error;
             }
 
@@ -50,7 +49,7 @@ export const useUserStore = defineStore('user', {
         async removerUsuario(id) {
             try {
                 await api.delete(`/users/${id}`)
-                this.usuarios = this.usuarios.filter(build => build.id !== id)
+                this.usuarios = this.usuarios.filter(usuario => usuario.id !== id)
             }
 
             catch (error) {
@@ -69,7 +68,7 @@ export const useUserStore = defineStore('user', {
             }
 
             catch (error) {
-                console.log(error)
+                if (error?.response?.status === 401) return
                 throw error;
             }
 
@@ -84,7 +83,7 @@ export const useUserStore = defineStore('user', {
             }
 
             catch (error) {
-                console.log(error)
+                if (error?.response?.status === 401) return
                 throw error;
             }
 

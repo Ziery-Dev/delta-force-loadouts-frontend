@@ -2,24 +2,19 @@
     <div class="container">
         <h1>Lista de usuários</h1>
         <div class="listagem-group">
-            <ul v-for="user in userStore.usuarios" :key="user.id">
-                <div class="user-group">
-                    <li>
-                        {{ user.username }}
-                    </li>
-                    <li> ID: {{ user.id }}</li>
-                    <li> ativo: {{ user.enabled ? "Sim" : "Não" }}</li>
-
+            <ul>
+                <li v-for="user in userStore.usuarios" :key="user.id" class="user-group">
+                    <p>{{ user.username }}</p>
+                    <p> ID: {{ user.id }}</p>
+                    <p> ativo: {{ user.enabled ? "Sim" : "Não" }}</p>
                     <button @click="remover(user.id)">
                         Remover
                     </button>
                     <button @click="toggleBloquear(user)">
                         {{ user.enabled ? "Bloquear" : "Desbloquear" }}
                     </button>
-                </div>
-
+                </li>
             </ul>
-
         </div>
 
         <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
@@ -46,18 +41,36 @@ const totalPages = computed(() => userStore.totalPages)
 
 
 onMounted(() => {
-    userStore.listarUsuarios()
+    try {
+        if (!userStore.usuarios.length) {
+            userStore.listarUsuarios()
+        }
+    }
+    catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar usuários"
+        notify(mensagem, "error")
+    }
 })
 
 
-const proximaPg = () => {
-    if (currentPage.value + 1 >= totalPages.value) return
-    userStore.listarUsuarios(currentPage.value + 1)
+const proximaPg = async () => {
+    try {
+        if (currentPage.value + 1 >= totalPages.value) return
+        userStore.listarUsuarios(currentPage.value + 1)
+    } catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar usuários"
+        notify(mensagem, "error")
+    }
 }
 
-const anteriorPg = () => {
-    if (currentPage.value <= 0) return
-    userStore.listarUsuarios(currentPage.value - 1)
+const anteriorPg = async () => {
+    try {
+        if (currentPage.value <= 0) return
+        userStore.listarUsuarios(currentPage.value - 1)
+    } catch (error) {
+        const mensagem = error.response?.data?.erro || "Erro ao carregar usuários"
+        notify(mensagem, "error")
+    }
 }
 
 const remover = async (id) => {
@@ -122,10 +135,9 @@ const toggleBloquear = async (user) => {
     background-color: rgba(15, 27, 12, 0.438);
     padding: 10px;
 
-
 }
 
-.user-group li {
+ li {
     list-style: none;
     font-weight: bold;
 }

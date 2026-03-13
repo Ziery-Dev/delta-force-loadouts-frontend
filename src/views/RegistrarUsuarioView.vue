@@ -10,57 +10,31 @@
 
                 <div class="field">
                     <label for="username">Usuário</label>
-                    <input
-                        id="username"
-                        v-model="form.username"
-                        type="text"
-                        placeholder="Escolha um usuário"
-                        maxlength="30"
-                        required
-                        autocomplete="username"
-                    />
+                    <input id="username" v-model="form.username" type="text" placeholder="Escolha um usuário"
+                        maxlength="30" required autocomplete="username" />
                     <p v-if="errors.username" class="erro">{{ errors.username }}</p>
                 </div>
 
                 <div class="field">
                     <label for="email">E-mail</label>
-                    <input
-                        id="email"
-                        v-model="form.email"
-                        type="email"
-                        placeholder="Seu e-mail"
-                        maxlength="254"
-                        required
-                        autocomplete="email"
-                    />
+                    <input id="email" v-model="form.email" type="email" placeholder="Seu e-mail" maxlength="254"
+                        required autocomplete="email" />
                     <p v-if="errors.email" class="erro">{{ errors.email }}</p>
                 </div>
 
                 <div class="field">
                     <label for="password">Senha</label>
-                    <input
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        placeholder="Crie uma senha"
-                        maxlength="72"
-                        required
-                        autocomplete="new-password"
-                    />
+                    <input id="password" v-model="form.password" type="password" placeholder="Crie uma senha"
+                        maxlength="72" required autocomplete="new-password" />
                     <p v-if="errors.password" class="erro">{{ errors.password }}</p>
                 </div>
 
                 <div class="field">
                     <label for="confirmar">Confirmar senha</label>
-                    <input
-                        id="confirmar"
-                        v-model="form.confirmar"
-                        type="password"
-                        placeholder="Repita a senha"
-                        maxlength="72"
-                        required
-                        autocomplete="new-password"
-                    />
+                    <input id="confirmar" v-model="form.confirmar" type="password" placeholder="Repita a senha"
+                        maxlength="72" required autocomplete="new-password" />
+                    <p v-if="errors.confirmar" class="erro">{{ errors.confirmar }}</p>
+
                 </div>
 
                 <button class="register-button" type="submit">
@@ -86,9 +60,9 @@ import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router';
 import { notify } from '@/utils/notify';
 import {
-  isRegisterBlocked,
-  setRegisterCooldown,
-} from '@/utils/registerCooldownUltil' 
+    isRegisterBlocked,
+    setRegisterCooldown,
+} from '@/utils/registerCooldownUltil'
 
 const userStore = useUserStore()
 const router = useRouter();
@@ -106,14 +80,14 @@ const errors = ref({})
 
 const cadastrar = async () => {
     errors.value = {}
-    if(isRegisterBlocked()){
+    if (isRegisterBlocked()) {
         notify("Aguarde um tempo para cadastrar um novo usuário!", "warning")
         router.push('/login')
         return
     }
 
     if (form.value.password !== form.value.confirmar) {
-        errors.value.erro = 'Confirmação de senha não bate com a senha fornecida!'
+        errors.value.confirmar = 'Confirmação de senha não bate com a senha fornecida!'
         return
     }
 
@@ -138,7 +112,7 @@ const cadastrar = async () => {
     min-height: 100vh;
     background-image: url("../assets/back-login.jpg");
     background-size: cover;
-    background-position: center; 
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
