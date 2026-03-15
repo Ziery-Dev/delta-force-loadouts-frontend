@@ -21,7 +21,7 @@
     </div>
 
     
-    <CarregamentoComponent v-if="!buildStore.isLoadingBuilds"/>
+    <CarregamentoComponent v-if="buildStore.isLoadingBuilds"/>
     <ListagemBuilds v-else :builds="buildStore.builds" />
     <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
       :anteriorPg="anteriorPg" />
