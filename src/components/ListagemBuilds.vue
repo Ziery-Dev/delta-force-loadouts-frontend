@@ -54,14 +54,12 @@ import { notify } from '@/utils/notify';
 import { format } from 'date-fns';
 
 
-
 const props = defineProps({
   builds: {
     type: Array,
     default: () => []
   }
 })
-
 
 
 const buildStore = useBuildStore();

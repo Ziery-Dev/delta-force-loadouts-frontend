@@ -20,7 +20,9 @@
       </select>
     </div>
 
-    <ListagemBuilds :builds="buildStore.builds" />
+    
+    <CarregamentoComponent v-if="!buildStore.isLoadingBuilds"/>
+    <ListagemBuilds v-else :builds="buildStore.builds" />
     <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
       :anteriorPg="anteriorPg" />
 
@@ -36,6 +38,7 @@ import { useBuildStore } from '@/stores/build';
 import { onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { notify } from '@/utils/notify';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 
 const buildStore = useBuildStore()

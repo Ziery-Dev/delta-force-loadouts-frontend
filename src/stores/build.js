@@ -10,6 +10,8 @@ export const useBuildStore = defineStore('build', {
             search: '',
             currentPage: 0,
             totalPages: 0,
+            isLoadingBuilds: false,
+            isLoadingMinhasBuilds: false
         }
     },
 
@@ -54,6 +56,7 @@ export const useBuildStore = defineStore('build', {
         },
 
         async listarMinhasBuilds(page = 0, size = 10, sort = 'createdAt,desc') {
+            this.isLoadingMinhasBuilds = true
             try {
                 const response = await api.get(`/build/minhas-builds?page=${page}&size=${size}&sort=${sort}`)
                 this.minhasBuilds = response.data.content
@@ -64,6 +67,9 @@ export const useBuildStore = defineStore('build', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isLoadingMinhasBuilds = false
             }
 
         },
@@ -109,6 +115,7 @@ export const useBuildStore = defineStore('build', {
 
 
         async listarBuilds({ sort, order, alcance, search, page, size = 10 }) {
+            this.isLoadingBuilds = true
             try {
                 const response = await api.get('/build', {
                     params: {
@@ -128,6 +135,9 @@ export const useBuildStore = defineStore('build', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isLoadingBuilds = false
             }
         },
 
