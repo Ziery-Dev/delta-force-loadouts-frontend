@@ -6,11 +6,13 @@ export const useArmaStore = defineStore('arma', {
     state: () => {
         return {
             armas: [],
+            isLoading: false
         }
     },
 
     actions: {
         async listarArmas() {
+            this.isLoading = true
             try {
                 const response = await api.get('/arma')
                 this.armas = response.data
@@ -18,6 +20,9 @@ export const useArmaStore = defineStore('arma', {
             catch (error) {
                 if (error?.response?.status === 401) return   // 401 é tratado globalmente no interceptor
                 throw error;
+            }
+            finally{
+                this.isLoading = false
             }
         },
 
@@ -60,6 +65,7 @@ export const useArmaStore = defineStore('arma', {
                 if (error?.response?.status === 401) return
                 throw error;
             }
+            
 
         }
 

@@ -1,8 +1,10 @@
 <template>
     <div>
         <h1>Builds que você mesmo cadastrou:</h1>
-        <h2 v-if="buildStore.minhasBuilds.length === 0">Opa, parece que você ainda não possui builds cadastradas!</h2>
-        <ListagemBuilds :builds="buildStore.minhasBuilds" />
+        <CarregamentoComponent v-if="buildStore.isLoadingMinhasBuilds" />
+        <h2 v-else-if="buildStore.minhasBuilds.length === 0">Opa, parece que
+            você ainda não possui builds cadastradas!</h2>
+        <ListagemBuilds v-else :builds="buildStore.minhasBuilds" />
         <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
             :anteriorPg="anteriorPg" />
 
@@ -19,6 +21,7 @@ import { onMounted } from 'vue';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { storeToRefs } from 'pinia';
 import { notify } from '@/utils/notify';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 
 

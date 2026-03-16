@@ -1,10 +1,14 @@
 <template>
     <div>
         <h1>Suas builds favoritas!</h1>
-        <h2 v-if="favoritosStore.favoritos.length === 0">Opa, parece que você ainda não possui builds adicionadas a
+        <CarregamentoComponent v-if="favoritosStore.isLoading"/>
+
+        <h2 v-else-if="favoritosStore.favoritos.length === 0">Opa, parece que você ainda não possui builds adicionadas a
             favoritos!</h2>
-        <ListagemBuilds :builds="favoritosStore.favoritos" />
-        <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+
+        <ListagemBuilds v-else :builds="favoritosStore.favoritos" />
+        
+        <PaginacaoComponent  :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
             :anteriorPg="anteriorPg" />
 
     </div>
@@ -19,6 +23,7 @@ import { useFavoritosStore } from '@/stores/favoritos';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
 import { storeToRefs } from 'pinia';
 import { notify } from '@/utils/notify';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 const favoritosStore = useFavoritosStore()
 
@@ -57,7 +62,6 @@ const anteriorPg = async () => {
 
 
 }
-
 
 const { currentPage, totalPages } = storeToRefs(favoritosStore); //Usado para passar multiplos componentes do store via prps sem perder a reatividade
 

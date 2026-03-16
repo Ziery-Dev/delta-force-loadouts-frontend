@@ -27,6 +27,8 @@ export const useBuildStore = defineStore('build', {
                 if (error?.response?.status === 401) return
                 throw error
             }
+           
+            
         },
 
         async removerBuild(id) {
@@ -38,6 +40,7 @@ export const useBuildStore = defineStore('build', {
                 if (error?.response?.status === 401) return
                 throw error
             }
+             
         },
 
         async editarBuild(build, id) {
@@ -52,6 +55,7 @@ export const useBuildStore = defineStore('build', {
                 if (error?.response?.status === 401) return
                 throw error
             }
+          
 
         },
 

@@ -7,13 +7,15 @@ export const useUserStore = defineStore('user', {
         return {
             usuarios: [],
             currentPage: 0,
-            totalPages: 0
+            totalPages: 0,
+            isLoading: false
         }
     },
 
     actions: {
 
         async listarUsuarios(page = 0) {
+            this.isLoading = true
             try {
                 const response = await api.get('/users', {
                     params: {
@@ -29,6 +31,9 @@ export const useUserStore = defineStore('user', {
             } catch (error) {
                 if (error?.response?.status === 401) return
                 throw error
+            }
+            finally{
+                this.isLoading = false
             }
         },
 

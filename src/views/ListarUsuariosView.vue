@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <h1>Lista de usuários</h1>
-        <div class="listagem-group">
+        <CarregamentoComponent v-if="userStore.isLoading"/>
+        <div v-else class="listagem-group">
             <ul>
                 <li v-for="user in userStore.usuarios" :key="user.id" class="user-group">
                     <p>{{ user.username }}</p>
@@ -31,6 +32,7 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth';
 import { notify } from '@/utils/notify';
 import PaginacaoComponent from '@/components/PaginacaoComponent.vue';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 
 const authStore = useAuthStore()

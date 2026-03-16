@@ -1,7 +1,8 @@
 <template>
     <div class="listagem-group">
         <h1>Lista de armas</h1>
-        <ul v-for="a in armaStore.armas" :key="a.id">
+        <CarregamentoComponent v-if="armaStore.isLoading"/>
+        <ul v-else  v-for="a in armaStore.armas" :key="a.id">
             <li>
                 <div class="card-arma">
                     <div class="img-arma">
@@ -34,6 +35,7 @@ import { useArmaStore } from '@/stores/arma';
 import { onMounted, ref } from 'vue';
 import { notify } from '@/utils/notify';
 import CadastrarArmaView from './CadastrarArmaView.vue';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 
 

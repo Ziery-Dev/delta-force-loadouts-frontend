@@ -6,11 +6,13 @@ export const useOperadorStore = defineStore('operador', {
     state: () => {
         return {
             operadores: [],
+            isLoading: false
         }
     },
 
     actions: {
         async listarOperadores() {
+            this.isLoading = true
             try {
                 const response = await api.get('/operador')
                 this.operadores = response.data
@@ -18,6 +20,9 @@ export const useOperadorStore = defineStore('operador', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isLoading = false
             }
         },
 
@@ -31,7 +36,7 @@ export const useOperadorStore = defineStore('operador', {
                 if (error?.response?.status === 401) return
                 throw error;
             }
-
+            
 
         },
 
@@ -45,6 +50,7 @@ export const useOperadorStore = defineStore('operador', {
                 if (error?.response?.status === 401) return
                 throw error;
             }
+            
         },
 
         async editarOperador(operador, id){
@@ -60,6 +66,7 @@ export const useOperadorStore = defineStore('operador', {
                 if (error?.response?.status === 401) return
                 throw error;
             }
+         
         }
 
     }

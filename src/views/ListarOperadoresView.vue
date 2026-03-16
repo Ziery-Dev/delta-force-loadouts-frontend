@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <h1>Lista de operadores</h1>
-        <div class="listagem-group">
+        <CarregamentoComponent v-if="operadorStore.isLoading"/>
+        <div v-else class="listagem-group">
 
             <ul>
                 <li v-for="operador in operadorStore.operadores" :key="operador.id">
@@ -15,7 +16,7 @@
             </ul>
         </div>
 
-        <div v-if="editando" class="edicao-group" @click="fecharEdicao">
+        <div  v-if="editando" class="edicao-group" @click="fecharEdicao">
             <CadastrarOperadorView @click.stop :editando="editando" :operador="operadorEmEdicao"
                 @fechar-edicao="fecharEdicao" />
         </div>
@@ -28,6 +29,7 @@ import { useOperadorStore } from '@/stores/operador';
 import { notify } from '@/utils/notify';
 import { onMounted, ref } from 'vue';
 import CadastrarOperadorView from './CadastrarOperadorView.vue';
+import CarregamentoComponent from '@/components/CarregamentoComponent.vue';
 
 const operadorStore = useOperadorStore();
 const editando = ref(false)

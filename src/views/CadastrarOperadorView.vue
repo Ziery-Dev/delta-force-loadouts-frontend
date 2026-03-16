@@ -23,13 +23,15 @@
             <p v-if="errors.category" class="erro">{{ errors.category }}</p>
 
 
-            <button type="submit">{{ props.editando ? "Editar" : "Cadastrar" }}</button> <button
-                @click="emit('fechar-edicao')" v-if="props.editando" type="button"> Cancelar
+            <button type="submit">
+                {{ props.editando ? "Editar" : "Cadastrar" }}
+            </button>
+            <button @click="emit('fechar-edicao')" v-if="props.editando" type="button">
+                Cancelar
             </button>
 
 
         </form>
-
 
     </div>
 

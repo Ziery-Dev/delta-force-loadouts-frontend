@@ -8,14 +8,15 @@ export const useFavoritosStore = defineStore('favoritos', {
             favoritos: [],
             currentPage: 0,
             totalPages: 0,
+            isLoading: false
         }
     },
 
     actions: {
         async listarFavoritos(page = 0, size = 10, sort = 'createdAt,desc') {
+            this.isLoading = true
             try {
                 const response = await api.get(`/users/favoritos?page=${page}&size=${size}&sort=${sort}`)
-            
                 this.favoritos = response.data.content
                 this.totalPages = response.data.totalPages;
                 this.currentPage = response.data.number;
@@ -24,6 +25,9 @@ export const useFavoritosStore = defineStore('favoritos', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isLoading = false
             }
         },
         async adicionarFavorito(buildId) {
