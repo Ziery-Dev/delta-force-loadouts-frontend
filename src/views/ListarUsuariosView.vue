@@ -1,7 +1,12 @@
 <template>
     <div class="container">
         <h1>Lista de usuários</h1>
-        <CarregamentoComponent v-if="userStore.isLoading"/>
+        <CarregamentoComponent v-if="userStore.isLoading" />
+        
+        <p v-else-if="userStore.usuarios.length === 0">
+            Nenhum usuário encontrado.
+        </p>
+
         <div v-else class="listagem-group">
             <ul>
                 <li v-for="user in userStore.usuarios" :key="user.id" class="user-group">
@@ -18,8 +23,14 @@
             </ul>
         </div>
 
-        <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
-            :anteriorPg="anteriorPg" />
+       
+    <PaginacaoComponent
+      v-if="!userStore.isLoading && totalPages > 1"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      :proximaPg="proximaPg"
+      :anteriorPg="anteriorPg"
+    />
     </div>
 
 </template>
@@ -139,7 +150,7 @@ const toggleBloquear = async (user) => {
 
 }
 
- li {
+li {
     list-style: none;
     font-weight: bold;
 }

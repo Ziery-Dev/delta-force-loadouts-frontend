@@ -5,7 +5,7 @@
         <h2 v-else-if="buildStore.minhasBuilds.length === 0">Opa, parece que
             você ainda não possui builds cadastradas!</h2>
         <ListagemBuilds v-else :builds="buildStore.minhasBuilds" />
-        <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+        <PaginacaoComponent v-if="!buildStore.isLoadingMinhasBuilds && totalPages > 1" :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
             :anteriorPg="anteriorPg" />
 
     </div>

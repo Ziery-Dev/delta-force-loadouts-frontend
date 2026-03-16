@@ -2,6 +2,9 @@
     <div class="listagem-group">
         <h1>Lista de armas</h1>
         <CarregamentoComponent v-if="armaStore.isLoading"/>
+          <p v-else-if="armaStore.armas.length === 0">
+            Nenhuma arma encontrada.
+        </p>
         <ul v-else  v-for="a in armaStore.armas" :key="a.id">
             <li>
                 <div class="card-arma">

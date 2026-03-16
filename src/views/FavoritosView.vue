@@ -8,7 +8,7 @@
 
         <ListagemBuilds v-else :builds="favoritosStore.favoritos" />
         
-        <PaginacaoComponent  :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+        <PaginacaoComponent v-if="!favoritosStore.isLoading && totalPages > 1"  :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
             :anteriorPg="anteriorPg" />
 
     </div>

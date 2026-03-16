@@ -22,8 +22,11 @@
 
     
     <CarregamentoComponent v-if="buildStore.isLoadingBuilds"/>
+     <p v-else-if="buildStore.builds.length === 0">
+            Nenhuma build encontrada!
+      </p>
     <ListagemBuilds v-else :builds="buildStore.builds" />
-    <PaginacaoComponent :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
+    <PaginacaoComponent v-if="!buildStore.isLoadingBuilds && totalPages > 1" :currentPage="currentPage" :totalPages="totalPages" :proximaPg="proximaPg"
       :anteriorPg="anteriorPg" />
 
   </div>
