@@ -6,7 +6,8 @@ export const useOperadorStore = defineStore('operador', {
     state: () => {
         return {
             operadores: [],
-            isLoading: false
+            isLoading: false,
+            isSaving: false
         }
     },
 
@@ -27,6 +28,7 @@ export const useOperadorStore = defineStore('operador', {
         },
 
         async cadastrarOperador(operador) {
+            this.isSaving = true
             try {
                 const response = await api.post('/operador', operador)
                 this.operadores.push(response.data)
@@ -35,6 +37,9 @@ export const useOperadorStore = defineStore('operador', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isSaving = false
             }
             
 
@@ -54,6 +59,7 @@ export const useOperadorStore = defineStore('operador', {
         },
 
         async editarOperador(operador, id){
+            this.isSaving = true
             try{
                 const response = await api.put(`/operador/${id}`, operador)
                 const index = this.operadores.findIndex(op => op.id === id ) //procura na lista "operadores" a posição de um item op onde o seu id é igual ao id recbido, armazendo essa posição na varivel index
@@ -65,6 +71,9 @@ export const useOperadorStore = defineStore('operador', {
               catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally{
+                this.isSaving = false
             }
          
         }

@@ -11,13 +11,15 @@ export const useBuildStore = defineStore('build', {
             currentPage: 0,
             totalPages: 0,
             isLoadingBuilds: false,
-            isLoadingMinhasBuilds: false
+            isLoadingMinhasBuilds: false,
+            isSaving: false
         }
     },
 
     actions: {
 
         async cadastrarBuild(build) {
+            this.isSaving = true
             try {
                 const response = await api.post('/build', build)
                 this.builds.push(response.data)
@@ -26,6 +28,9 @@ export const useBuildStore = defineStore('build', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error
+            }
+            finally{
+                this.isSaving = false
             }
            
             
@@ -44,6 +49,7 @@ export const useBuildStore = defineStore('build', {
         },
 
         async editarBuild(build, id) {
+            this.isSaving = true
             try {
                 const response = await api.put(`/build/${id}`, build)
                 const index = this.builds.findIndex(b => b.id === id)
@@ -54,6 +60,9 @@ export const useBuildStore = defineStore('build', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error
+            }
+            finally{
+                this.isSaving = false
             }
           
 

@@ -2,6 +2,9 @@
     <div class="container">
         <h1>Lista de operadores</h1>
         <CarregamentoComponent v-if="operadorStore.isLoading"/>
+
+        <h2 v-else-if="operadorStore.operadores.length === 0">Nenhum operador encontrado.</h2>
+
         <div v-else class="listagem-group">
 
             <ul>
@@ -10,7 +13,7 @@
                         <p> {{ operador.name }}</p>
                     </div>
                     <button @click="editarArma(operador)">Editar</button>
-                    <button @click="remover(operador.id)">Remover</button>
+                    <button @click="remover(operador.id)">{{removingId === operador.id ? "Removendo..." : "Remover"}}</button>
                     <hr>
                 </li>
             </ul>
@@ -35,6 +38,11 @@ const operadorStore = useOperadorStore();
 const editando = ref(false)
 const operadorEmEdicao = ref(null)
 
+const removingId = ref(null)
+
+
+
+
 onMounted(() => {
     try {
         if (!operadorStore.operadores.length) {
@@ -48,6 +56,8 @@ onMounted(() => {
 })
 
 const remover = async (id) => {
+    if(removingId.value) return
+    removingId.value = id
     try {
         await operadorStore.removerOperador(id)
         notify("Operador removido com sucesso!", "success")
@@ -56,6 +66,9 @@ const remover = async (id) => {
     catch (error) {
         const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
         notify(mensagem, "error")
+    }
+    {
+        removingId.value = null
     }
 
 }

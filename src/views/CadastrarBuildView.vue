@@ -34,8 +34,8 @@
             <p v-if="errors.code" class="erro">{{ errors.code }}</p>
 
 
-            <button type="submit" :disabled="isSubmitting">{{ props.editando ? "Editar" : "Cadastrar" }}</button>
-            <button class="cancelarEdicao" type="button" v-if="props.editando"
+            <button type="submit" :disabled="buildStore.isSaving">{{ buildStore.isSaving ? "Salvando..." : props.editando ? "Editar" : "Cadastrar" }}</button>
+            <button class="cancelarEdicao" type="button" :disabled="buildStore.isSaving"  v-if="props.editando"
                 @click="emit('fechar-edicao')">Cancelar</button>
 
         </form>
@@ -70,7 +70,6 @@ const armaStore = useArmaStore();
 
 const errors = ref({});
 
-const isSubmitting = ref(false)
 
 const form = ref({
     code: '',
@@ -105,10 +104,7 @@ const alcances = [
 
 
 const salvarBuild = async () => {
-    if (isSubmitting.value) return
-    isSubmitting.value = true
     errors.value = {}
-
     try {
         if (!props.editando) {
 
@@ -141,10 +137,8 @@ const salvarBuild = async () => {
         notify(mensagem, "error")
 
     }
+    
 
-    finally {
-        isSubmitting.value = false
-    }
 }
 
 

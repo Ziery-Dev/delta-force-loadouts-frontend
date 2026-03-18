@@ -6,7 +6,8 @@ export const useArmaStore = defineStore('arma', {
     state: () => {
         return {
             armas: [],
-            isLoading: false
+            isLoading: false,
+            isSaving: false
         }
     },
 
@@ -21,12 +22,13 @@ export const useArmaStore = defineStore('arma', {
                 if (error?.response?.status === 401) return   // 401 é tratado globalmente no interceptor
                 throw error;
             }
-            finally{
+            finally {
                 this.isLoading = false
             }
         },
 
         async cadastrarArma(arma) {
+            this.isSaving = true
             try {
                 const response = await api.post('/arma', arma)
                 this.armas.push(response.data)
@@ -35,6 +37,9 @@ export const useArmaStore = defineStore('arma', {
             catch (error) {
                 if (error?.response?.status === 401) return
                 throw error;
+            }
+            finally {
+                this.isSaving = false
             }
 
 
@@ -54,6 +59,7 @@ export const useArmaStore = defineStore('arma', {
         },
 
         async editarArma(arma, id) {
+            this.isSaving = true
             try {
                 const response = await api.put(`/arma/${id}`, arma)
                 const index = this.armas.findIndex(a => a.id === id)
@@ -65,7 +71,10 @@ export const useArmaStore = defineStore('arma', {
                 if (error?.response?.status === 401) return
                 throw error;
             }
-            
+             finally{
+                this.isSaving = false
+            }
+
 
         }
 

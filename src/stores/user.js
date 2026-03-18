@@ -8,7 +8,8 @@ export const useUserStore = defineStore('user', {
             usuarios: [],
             currentPage: 0,
             totalPages: 0,
-            isLoading: false
+            isLoading: false,
+            isRegistering: false
         }
     },
 
@@ -38,6 +39,7 @@ export const useUserStore = defineStore('user', {
         },
 
         async cadastrarUsuario(usuario) {
+            this.isRegistering = true
             try {
                 const response = await api.post('/users', usuario)
                 this.usuarios.push(response.data)
@@ -46,6 +48,9 @@ export const useUserStore = defineStore('user', {
             catch (error) {
                 if (error?.response?.status === 401) return   // 401 é tratado globalmente no interceptor
                 throw error;
+            }
+            finally{
+                this.isRegistering = false
             }
 
 

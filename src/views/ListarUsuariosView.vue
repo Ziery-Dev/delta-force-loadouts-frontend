@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Lista de usuários</h1>
         <CarregamentoComponent v-if="userStore.isLoading" />
-        
+
         <p v-else-if="userStore.usuarios.length === 0">
             Nenhum usuário encontrado.
         </p>
@@ -14,23 +14,18 @@
                     <p> ID: {{ user.id }}</p>
                     <p> ativo: {{ user.enabled ? "Sim" : "Não" }}</p>
                     <button @click="remover(user.id)">
-                        Remover
+                        {{ removingId === user.id ? "Removendo..." : "Remover" }}
                     </button>
                     <button @click="toggleBloquear(user)">
-                        {{ user.enabled ? "Bloquear" : "Desbloquear" }}
+                        {{ blockingId === user.id ? "Bloqueando..." : unblocking === user.id ? "Desbloqueando..." : user.enabled ? "Bloquear" : "Desbloquear" }}
                     </button>
                 </li>
             </ul>
         </div>
 
-       
-    <PaginacaoComponent
-      v-if="!userStore.isLoading && totalPages > 1"
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      :proximaPg="proximaPg"
-      :anteriorPg="anteriorPg"
-    />
+
+        <PaginacaoComponent v-if="!userStore.isLoading && totalPages > 1" :currentPage="currentPage"
+            :totalPages="totalPages" :proximaPg="proximaPg" :anteriorPg="anteriorPg" />
     </div>
 
 </template>
@@ -38,7 +33,7 @@
 
 <script setup>
 import { useUserStore } from '@/stores/user';
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth';
 import { notify } from '@/utils/notify';
@@ -51,6 +46,12 @@ const userStore = useUserStore()
 
 const currentPage = computed(() => userStore.currentPage)
 const totalPages = computed(() => userStore.totalPages)
+
+const removingId = ref(null)
+const blockingId = ref(null)
+const unblocking  = ref (null)
+
+
 
 
 onMounted(() => {
@@ -87,10 +88,13 @@ const anteriorPg = async () => {
 }
 
 const remover = async (id) => {
+
     if (!authStore.isAuthenticated) {
         router.push("/requisicao-login")
         return
     }
+    if (removingId.value) return
+    removingId.value = id
     try {
         await userStore.removerUsuario(id)
         notify("Usuário removido!", "warning")
@@ -99,6 +103,9 @@ const remover = async (id) => {
         const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
         notify(mensagem, "error")
     }
+    finally {
+        removingId.value = null
+    }
 }
 const toggleBloquear = async (user) => {
     if (!authStore.isAuthenticated) {
@@ -106,6 +113,8 @@ const toggleBloquear = async (user) => {
         return
     }
     if (user.enabled) {
+        if (blockingId.value) return
+        blockingId.value = user.id
         try {
             await userStore.bloquearUsuario(user.id)
             notify("Usuário bloqueado!", "warning")
@@ -114,8 +123,13 @@ const toggleBloquear = async (user) => {
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
             notify(mensagem, "error")
         }
+        finally {
+            blockingId.value = null
+        }
     }
     else {
+        if(unblocking.value)
+        unblocking.value = user.id
         try {
             await userStore.desbloquearUsuario(user.id)
             notify("Usuário desbloqueado!", "success")
@@ -124,7 +138,11 @@ const toggleBloquear = async (user) => {
             const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
             notify(mensagem, "error")
         }
+        finally{
+            unblocking.value = null
+        }
     }
+
 }
 
 </script>

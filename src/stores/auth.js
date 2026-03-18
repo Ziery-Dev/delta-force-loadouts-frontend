@@ -6,11 +6,13 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
     user: null, // dados decodificados do token (ex: username, roles)
-    isAuthenticated: !!localStorage.getItem('token')
+    isAuthenticated: !!localStorage.getItem('token'),
+    isLoggingIn: false
   }),
 
   actions: {
     async login(username, password) {
+      this.isLoggingIn = true
       try {
         const res = await api.post('/auth/login', { username, password })
         this.token = res.data.token
@@ -31,6 +33,9 @@ export const useAuthStore = defineStore('auth', {
         throw error;
 
 
+      }
+      finally {
+        this.isLoggingIn = false
       }
     },
 

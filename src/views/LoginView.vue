@@ -29,8 +29,8 @@
                 </div>
 
 
-                <button class="login-button" type="submit">
-                    Entrar
+                <button class="login-button" type="submit" :disabled="authStore.isLoggingIn">
+                    {{ authStore.isLoggingIn ? "Entrando..." : "Entrar" }}
                 </button>
             </form>
 

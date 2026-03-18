@@ -13,11 +13,15 @@
 
       <div class="button-group">
         <button @click="copiarCodigo(b.code)"><span class="material-icons">content_copy</span></button>
-        <button v-if="podeRemover(b)" @click="removerBuild(b.id)"><span class="material-icons">delete</span></button>
+
+        <button v-if="podeRemover(b)" @click="removerBuild(b.id)">
+          <span class="material-icons">{{ removingId === b.id ? "auto_delete" :  "delete"}}</span>
+        </button>
+
         <button v-if="podeEditar(b)" @click="editarBuild(b)"><span class="material-icons">edit_document</span></button>
         <button v-if="authStore.isAuthenticated" :class="{ favoritado: buildFavoritada(b.id) }"
           @click="toggleFavorito(b.id)">
-          <span class="material-icons">favorite</span>
+          <span class="material-icons">{{favoritingId === b.id ? "schedule" : "favorite" }}</span>
         </button>
       </div>
       <div class="like-group">
@@ -70,6 +74,8 @@ const favoritosStore = useFavoritosStore()
 
 const editando = ref(false)
 const buildEmEdicao = ref(null)
+const removingId = ref(null)
+const favoritingId = ref (null)
 
 
 onMounted(async () => {
@@ -104,6 +110,8 @@ const copiarCodigo = (code) => {
 }
 
 const removerBuild = async (id) => {
+  if (removingId.value) return
+  removingId.value = id
   try {
     await buildStore.removerBuild(id)
     notify("Removido com sucesso!", "success")
@@ -111,6 +119,9 @@ const removerBuild = async (id) => {
   catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
     notify(mensagem, "error")
+  }
+  finally {
+    removingId.value = false
   }
 }
 
@@ -152,9 +163,9 @@ const podeEditar = (build) => {
 
 //Quando acionado, adiciona a build a lista de favoritos do usuário
 const toggleFavorito = async (buildId) => {
+  if(favoritingId.value) return
+  favoritingId.value = buildId
   try {
-
-
     if (!favoritosStore.favoritos.some(f => f.id === buildId)) { //verifica se a build atual ainda não pertence a favoritos
       await favoritosStore.adicionarFavorito(buildId)
       notify('adicionado a favoritos!', "success")
@@ -168,6 +179,9 @@ const toggleFavorito = async (buildId) => {
   catch (error) {
     const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
     notify(mensagem, "error")
+  }
+  finally{
+    favoritingId.value = null
   }
 
 }

@@ -34,8 +34,8 @@
             <input v-model="form.imgUrl" id="imagem" type="text" maxlength="200" required>
             <p v-if="errors.imgUrl" class="erro">{{ errors.imgUrl }}</p>
 
-            <button type="submit"> {{ props.editando ? "Editar" : "Cadastrar" }}</button>
-            <button class="botao-cancelar" type="button" v-if="props.editando" @click="emit('fechar-edicao')">
+            <button type="submit" :disabled="armaStore.isSaving"> {{ armaStore.isSaving ? "Salvando..." :  props.editando ? "Editar" : "Cadastrar" }}</button>
+            <button class="botao-cancelar"  type="button" :disabled="armaStore.isSaving" v-if="props.editando" @click="emit('fechar-edicao')">
                 Cancelar</button>
 
         </form>

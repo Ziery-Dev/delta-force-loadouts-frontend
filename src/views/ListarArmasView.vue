@@ -1,11 +1,11 @@
 <template>
     <div class="listagem-group">
         <h1>Lista de armas</h1>
-        <CarregamentoComponent v-if="armaStore.isLoading"/>
-          <p v-else-if="armaStore.armas.length === 0">
+        <CarregamentoComponent v-if="armaStore.isLoading" />
+        <h2 v-else-if="armaStore.armas.length === 0">
             Nenhuma arma encontrada.
-        </p>
-        <ul v-else  v-for="a in armaStore.armas" :key="a.id">
+        </h2>
+        <ul v-else v-for="a in armaStore.armas" :key="a.id">
             <li>
                 <div class="card-arma">
                     <div class="img-arma">
@@ -16,8 +16,8 @@
                         <button @click="editarArma(a)">
                             Editar
                         </button>
-                        <button @click="removerArma(a.id)">
-                            Remover
+                        <button @click="removerArma(a.id)" :disabled="removingId === a.id">
+                            {{ removingId === a.id ? "Removendo..." : "Remover" }}
                         </button>
                     </div>
 
@@ -47,6 +47,8 @@ const armaStore = useArmaStore();
 const editando = ref(false)
 const armaEmEdicao = ref(null)
 
+const removingId = ref(null)
+
 
 onMounted(async () => {
     try {
@@ -61,6 +63,8 @@ onMounted(async () => {
 })
 
 const removerArma = async (id) => {
+    if (removingId.value) return
+    removingId.value = id
     try {
         await armaStore.removerArma(id)
         notify("Arma removida!", "success")
@@ -68,6 +72,9 @@ const removerArma = async (id) => {
     catch (error) {
         const mensagem = error.response?.data?.erro || "Erro desconhecido, tente novamente"
         notify(mensagem, "error")
+    }
+    finally{
+        removingId.value = null
     }
 }
 
@@ -115,7 +122,7 @@ const fecharEdicao = () => {
                 gap: 5px;
 
                 button {
-                    width: 70px;
+                    width: 100px;
                     border-radius: 4px;
                     border: 1px solid white;
                     background-color: #19db50;

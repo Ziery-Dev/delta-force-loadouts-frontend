@@ -37,8 +37,8 @@
 
                 </div>
 
-                <button class="register-button" type="submit">
-                    Cadastrar
+                <button class="register-button" type="submit" :disabled="userStore.isRegistering">
+                    {{userStore.isRegistering ? "Cadastrando..." : "Cadastrar"}}
                 </button>
             </form>
 
