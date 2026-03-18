@@ -2,6 +2,8 @@
   <div>
     <NavBar />
     <router-view />
+    <AvisoLentidao  v-if="mostrarAviso"
+    @close="handleClose"/>
     <ToastContainer/>
 
   </div>
@@ -10,8 +12,40 @@
 </template>
 
 <script setup>
+import AvisoLentidao from './components/AvisoLentidao.vue';
 import NavBar from './components/NavBar.vue'
 import ToastContainer from './components/ToastContainer.vue';
+import { onMounted,ref } from 'vue';
+
+
+//Script para exibir aviso de lentidao
+const mostrarAviso = ref(false)
+
+const INTERVALO_AVISO = 60 * 60 * 1000// 1 hora
+
+onMounted(() => {
+  const esconder = localStorage.getItem('serverWarningHidden') === 'true'
+  const ultimaExibicao = Number(localStorage.getItem('serverWarningLastShown') || 0)
+
+  if (esconder) return
+
+  const now = Date.now()
+  const podeExibirNovamente = now - ultimaExibicao >= INTERVALO_AVISO
+
+  if (podeExibirNovamente) {
+    mostrarAviso.value = true
+  }
+})
+
+function handleClose(naoMostarNovamente) {
+  localStorage.setItem('serverWarningLastShown', Date.now().toString())
+
+  if (naoMostarNovamente) {
+    localStorage.setItem('serverWarningHidden', 'true')
+  }
+
+  mostrarAviso.value = false
+}
 
 
 </script>
