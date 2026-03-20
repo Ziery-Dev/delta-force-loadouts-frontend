@@ -1,82 +1,66 @@
-# Delta Force Loadouts - Backend
+# Delta Force Loadouts - Frontend
 
 ## 📌 Sobre o projeto
 
-API REST desenvolvida em Spring Boot para gerenciamento de builds de armas do jogo Delta Force Mobile.
+Interface web desenvolvida em Vue 3 para consumo da API de builds de armas.
 
-O sistema permite cadastro, consulta e interação com builds, além de funcionalidades administrativas para gerenciamento de usuários, armas e operadores.
+A aplicação permite visualizar, cadastrar e interagir com builds de forma dinâmica, com controle de autenticação e permissões.
 
 ---
 
 ## 🚀 Tecnologias utilizadas
 
-- Java
-- Spring Boot
-- Spring Security
-- JWT (autenticação)
-- Spring Data JPA
-- MySQL / PostgreSQL
-- Lombok
+- Vue 3
+- Pinia (gerenciamento de estado)
+- Vue Router
+- Axios
+- CSS / SCSS
 
 ---
 
-## 🔐 Segurança
+## 🔐 Autenticação
 
-- Autenticação via JWT
-- Controle de acesso por roles (ADMIN / USUARIO)
-- Proteção de rotas no backend
-- Bloqueio temporário de login por excesso de tentativas
-- Tratamento global de exceções
+- Login com JWT
+- Persistência de sessão via localStorage
+- Interceptor para tratamento automático de 401
+- Redirecionamento automático em caso de sessão expirada
 
 ---
 
-## ⚙️ Funcionalidades principais
+## ⚙️ Funcionalidades
 
-- CRUD de builds
-- Sistema de likes e dislikes
+- Listagem de builds com paginação
+- Busca por arma ou criador
+- Filtros por alcance
+- Ordenação por data, likes e dislikes
+- Cadastro e edição de builds
 - Sistema de favoritos
-- Filtros, busca e paginação
-- Controle de permissões (usuário vs admin)
-- Gestão de usuários (bloqueio/desbloqueio)
-- Gestão de armas e operadores
+- Sistema de avaliação (like/dislike)
+- Área administrativa (armas, operadores, usuários)
 
 ---
 
-## 📊 Regras de negócio
+## 🧠 Arquitetura
 
-- Apenas o dono pode editar a própria build
-- Admin pode remover qualquer build
-- Likes/dislikes são únicos por usuário
-- Código da build é único
-- Usuários bloqueados não podem autenticar
-
----
-
-## 🧩 Estrutura do projeto
-
-- controller → endpoints REST
-- service → regras de negócio
-- repository → acesso ao banco
-- entity → entidades JPA
-- dto → transferência de dados
-- security → autenticação e autorização
-- exception → tratamento global de erros
+- views → páginas principais
+- components → componentes reutilizáveis
+- stores → estado global com Pinia
+- router → controle de navegação e permissões
+- utils → Axios, notificações e helpers
 
 ---
 
-## ▶️ Como rodar o projeto
+## 💬 Feedback de interface
 
-1. Configurar banco de dados
-2. Ajustar `application.properties`
-3. Configurar variáveis de ambiente (JWT, DB)
-4. Rodar aplicação
+- erros de formulário exibidos inline
+- notificações globais para ações e erros
+- indicadores de loading em listagens e ações
+- feedback visual em botões (ex: removendo...)
 
 ---
 
-## 💡 Observações
+## ▶️ Como rodar
 
-Este projeto foi desenvolvido com foco em prática real de:
-- autenticação e autorização
-- organização em camadas
-- regras de negócio
-- tratamento de erros
+1. Instalar dependências:
+```bash
+npm install
