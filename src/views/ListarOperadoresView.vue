@@ -11,6 +11,7 @@
                 <li v-for="operador in operadorStore.operadores" :key="operador.id">
                     <div>
                         <p> {{ operador.name }}</p>
+
                     </div>
                     <button @click="editarArma(operador)">Editar</button>
                     <button @click="remover(operador.id)">{{removingId === operador.id ? "Removendo..." : "Remover"}}</button>

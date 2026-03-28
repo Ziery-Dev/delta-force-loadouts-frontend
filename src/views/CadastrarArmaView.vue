@@ -24,6 +24,7 @@
             <div class="selecionar-operador">
                 <div v-for="op in operadorStore.operadores" :key="op.id">
                     <p :for="op.id">{{ op.name }}</p>
+                    <p>{{ op.category }}</p>
                     <input type="checkbox" :id="op.id" :value="op.id" v-model="form.operatorIds" name="operador" />
                 </div>
             </div>
@@ -277,7 +278,7 @@ h1 {
     font-size: 0.8em;
     margin: 5px;
     border: 1px dashed rgb(118, 197, 94);
-    padding: 5px;
+    padding: 10px;
     height: 60px;
     width: 100px;
 }
